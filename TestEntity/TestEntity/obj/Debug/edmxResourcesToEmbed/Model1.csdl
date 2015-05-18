@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="StartupModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="F_CAT_ID" />
+    </Key>
+    <Property Name="F_CAT_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="F_PARENT_CAT_ID" Type="Int32" />
+    <Property Name="F_CAT_NAME" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="F_CAT_URL" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="Category1" Relationship="Self.FK_Category_Category" FromRole="Category" ToRole="Category1" />
+    <NavigationProperty Name="Category2" Relationship="Self.FK_Category_Category" FromRole="Category1" ToRole="Category" />
+    <NavigationProperty Name="Product" Relationship="StartupModel.FK_Product_Category" FromRole="Category" ToRole="Product" />
+  </EntityType>
+  <EntityType Name="V_CATEGORY">
+    <Key>
+      <PropertyRef Name="F_CAT_ID" />
+    </Key>
+    <Property Name="F_CAT_ID" Type="Int32" Nullable="false" />
+    <Property Name="F_CAT_NAME" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="F_CAT_URL" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="F_CAT_PARENT_NAME" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <Association Name="FK_Category_Category">
+    <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+    <End Role="Category1" Type="Self.Category" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="F_CAT_ID" />
+      </Principal>
+      <Dependent Role="Category1">
+        <PropertyRef Name="F_PARENT_CAT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="StartupEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Category" EntityType="Self.Category" />
+    <EntitySet Name="V_CATEGORY" EntityType="Self.V_CATEGORY" />
+    <AssociationSet Name="FK_Category_Category" Association="Self.FK_Category_Category">
+      <End Role="Category" EntitySet="Category" />
+      <End Role="Category1" EntitySet="Category" />
+    </AssociationSet>
+    <FunctionImport Name="PV_INS_CATEGORY">
+      <Parameter Name="catname" Mode="In" Type="String" />
+      <Parameter Name="catparentname" Mode="In" Type="String" />
+      <Parameter Name="caturl" Mode="In" Type="String" />
+    </FunctionImport>
+    <EntitySet Name="Product" EntityType="StartupModel.Product" />
+    <AssociationSet Name="FK_Product_Category" Association="StartupModel.FK_Product_Category">
+      <End Role="Category" EntitySet="Category" />
+      <End Role="Product" EntitySet="Product" />
+    </AssociationSet>
+    <FunctionImport Name="P_INS_COSTPRODUCT">
+      <Parameter Name="product_id" Mode="In" Type="Int32" />
+      <Parameter Name="cost" Mode="In" Type="Decimal" />
+    </FunctionImport>
+  </EntityContainer>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="F_PRODUCT_ID" />
+    </Key>
+    <Property Name="F_PRODUCT_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="F_CAT_ID" Type="Int32" Nullable="false" />
+    <Property Name="F_NAME" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="F_VES" Type="Single" Nullable="false" />
+    <Property Name="F_INGREDIENT_ID" Type="Int32" />
+    <Property Name="F_URL" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Category" Relationship="StartupModel.FK_Product_Category" FromRole="Product" ToRole="Category" />
+  </EntityType>
+  <Association Name="FK_Product_Category">
+    <End Type="StartupModel.Category" Role="Category" Multiplicity="1" />
+    <End Type="StartupModel.Product" Role="Product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="F_CAT_ID" />
+      </Principal>
+      <Dependent Role="Product">
+        <PropertyRef Name="F_CAT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Хранилище StartupModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="F_CAT_ID" />
+          </Key>
+          <Property Name="F_CAT_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="F_PARENT_CAT_ID" Type="int" />
+          <Property Name="F_CAT_NAME" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="F_CAT_URL" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="F_PRODUCT_ID" />
+          </Key>
+          <Property Name="F_PRODUCT_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="F_CAT_ID" Type="int" Nullable="false" />
+          <Property Name="F_NAME" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="F_VES" Type="real" Nullable="false" />
+          <Property Name="F_INGREDIENT_ID" Type="int" />
+          <Property Name="F_URL" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Startup.dbo.V_CATEGORY" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+        <EntityType Name="V_CATEGORY">
+          <Key>
+            
+            
+            <PropertyRef Name="F_CAT_ID" />
+          </Key>
+          <Property Name="F_CAT_NAME" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="F_CAT_URL" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="F_CAT_PARENT_NAME" Type="nvarchar(max)" />
+          <Property Name="F_CAT_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Category_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="Category1" Type="Self.Category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="F_CAT_ID" />
+            </Principal>
+            <Dependent Role="Category1">
+              <PropertyRef Name="F_PARENT_CAT_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Product_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Product" Type="Self.Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="F_CAT_ID" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="F_CAT_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="P_INS_COSTPRODUCT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="product_id" Type="int" Mode="In" />
+          <Parameter Name="cost" Type="money" Mode="In" />
+        </Function>
+        <Function Name="PV_INS_CATEGORY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="catname" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="catparentname" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="caturl" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <EntityContainer Name="Хранилище StartupModelContainer">
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="V_CATEGORY" EntityType="Self.V_CATEGORY" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [V_CATEGORY].[F_CAT_NAME] AS [F_CAT_NAME], 
+    [V_CATEGORY].[F_CAT_URL] AS [F_CAT_URL], 
+    [V_CATEGORY].[F_CAT_PARENT_NAME] AS [F_CAT_PARENT_NAME], 
+    [V_CATEGORY].[F_CAT_ID] AS [F_CAT_ID]
+    FROM [dbo].[V_CATEGORY] AS [V_CATEGORY]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Category_Category" Association="Self.FK_Category_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Category1" EntitySet="Category" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="StartupModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="F_CAT_ID" />
+          </Key>
+          <Property Name="F_CAT_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="F_PARENT_CAT_ID" Type="Int32" />
+          <Property Name="F_CAT_NAME" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="F_CAT_URL" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Category1" Relationship="Self.FK_Category_Category" FromRole="Category" ToRole="Category1" />
+          <NavigationProperty Name="Category2" Relationship="Self.FK_Category_Category" FromRole="Category1" ToRole="Category" />
+          <NavigationProperty Name="Product" Relationship="StartupModel.FK_Product_Category" FromRole="Category" ToRole="Product" />
+        </EntityType>
+        <EntityType Name="V_CATEGORY">
+          <Key>
+            <PropertyRef Name="F_CAT_ID" />
+          </Key>
+          <Property Name="F_CAT_ID" Type="Int32" Nullable="false" />
+          <Property Name="F_CAT_NAME" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="F_CAT_URL" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="F_CAT_PARENT_NAME" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <Association Name="FK_Category_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+          <End Role="Category1" Type="Self.Category" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="F_CAT_ID" />
+            </Principal>
+            <Dependent Role="Category1">
+              <PropertyRef Name="F_PARENT_CAT_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="StartupEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Category" EntityType="Self.Category" />
+          <EntitySet Name="V_CATEGORY" EntityType="Self.V_CATEGORY" />
+          <AssociationSet Name="FK_Category_Category" Association="Self.FK_Category_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Category1" EntitySet="Category" />
+          </AssociationSet>
+          <FunctionImport Name="PV_INS_CATEGORY">
+            <Parameter Name="catname" Mode="In" Type="String" />
+            <Parameter Name="catparentname" Mode="In" Type="String" />
+            <Parameter Name="caturl" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="Product" EntityType="StartupModel.Product" />
+          <AssociationSet Name="FK_Product_Category" Association="StartupModel.FK_Product_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Product" EntitySet="Product" />
+          </AssociationSet>
+          <FunctionImport Name="P_INS_COSTPRODUCT">
+            <Parameter Name="product_id" Mode="In" Type="Int32" />
+            <Parameter Name="cost" Mode="In" Type="Decimal" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="F_PRODUCT_ID" />
+          </Key>
+          <Property Name="F_PRODUCT_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="F_CAT_ID" Type="Int32" Nullable="false" />
+          <Property Name="F_NAME" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="F_VES" Type="Single" Nullable="false" />
+          <Property Name="F_INGREDIENT_ID" Type="Int32" />
+          <Property Name="F_URL" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Category" Relationship="StartupModel.FK_Product_Category" FromRole="Product" ToRole="Category" />
+        </EntityType>
+        <Association Name="FK_Product_Category">
+          <End Type="StartupModel.Category" Role="Category" Multiplicity="1" />
+          <End Type="StartupModel.Product" Role="Product" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="F_CAT_ID" />
+            </Principal>
+            <Dependent Role="Product">
+              <PropertyRef Name="F_CAT_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище StartupModelContainer" CdmEntityContainer="StartupEntities">
+          <EntitySetMapping Name="Category">
+            <EntityTypeMapping TypeName="StartupModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="F_CAT_ID" ColumnName="F_CAT_ID" />
+                <ScalarProperty Name="F_PARENT_CAT_ID" ColumnName="F_PARENT_CAT_ID" />
+                <ScalarProperty Name="F_CAT_NAME" ColumnName="F_CAT_NAME" />
+                <ScalarProperty Name="F_CAT_URL" ColumnName="F_CAT_URL" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="V_CATEGORY">
+            <EntityTypeMapping TypeName="StartupModel.V_CATEGORY">
+              <MappingFragment StoreEntitySet="V_CATEGORY">
+                <ScalarProperty Name="F_CAT_ID" ColumnName="F_CAT_ID" />
+                <ScalarProperty Name="F_CAT_NAME" ColumnName="F_CAT_NAME" />
+                <ScalarProperty Name="F_CAT_URL" ColumnName="F_CAT_URL" />
+                <ScalarProperty Name="F_CAT_PARENT_NAME" ColumnName="F_CAT_PARENT_NAME" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="StartupModel.V_CATEGORY">
+              <ModificationFunctionMapping>
+                <InsertFunction FunctionName="Хранилище StartupModel.PV_INS_CATEGORY" >
+                  <ScalarProperty Name="F_CAT_URL" ParameterName="caturl" />
+                  <ScalarProperty Name="F_CAT_PARENT_NAME" ParameterName="catparentname" />
+                  <ScalarProperty Name="F_CAT_NAME" ParameterName="catname" />
+                </InsertFunction>
+              </ModificationFunctionMapping>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="PV_INS_CATEGORY" FunctionName="Хранилище StartupModel.PV_INS_CATEGORY" />
+          <EntitySetMapping Name="Product">
+            <EntityTypeMapping TypeName="StartupModel.Product">
+              <MappingFragment StoreEntitySet="Product">
+                <ScalarProperty Name="F_URL" ColumnName="F_URL" />
+                <ScalarProperty Name="F_INGREDIENT_ID" ColumnName="F_INGREDIENT_ID" />
+                <ScalarProperty Name="F_VES" ColumnName="F_VES" />
+                <ScalarProperty Name="F_NAME" ColumnName="F_NAME" />
+                <ScalarProperty Name="F_CAT_ID" ColumnName="F_CAT_ID" />
+                <ScalarProperty Name="F_PRODUCT_ID" ColumnName="F_PRODUCT_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="P_INS_COSTPRODUCT" FunctionName="Хранилище StartupModel.P_INS_COSTPRODUCT" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

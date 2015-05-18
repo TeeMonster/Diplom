@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="Хранилище StartupModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Category">
+    <Key>
+      <PropertyRef Name="F_CAT_ID" />
+    </Key>
+    <Property Name="F_CAT_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="F_PARENT_CAT_ID" Type="int" />
+    <Property Name="F_CAT_NAME" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="F_CAT_URL" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Product">
+    <Key>
+      <PropertyRef Name="F_PRODUCT_ID" />
+    </Key>
+    <Property Name="F_PRODUCT_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="F_CAT_ID" Type="int" Nullable="false" />
+    <Property Name="F_NAME" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="F_VES" Type="real" Nullable="false" />
+    <Property Name="F_INGREDIENT_ID" Type="int" />
+    <Property Name="F_URL" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <!--Ошибки, обнаруженные при создании:
+предупреждение 6002: В таблице или представлении "Startup.dbo.V_CATEGORY" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
+  <EntityType Name="V_CATEGORY">
+    <Key>
+      <PropertyRef Name="F_CAT_ID" />
+    </Key>
+    <Property Name="F_CAT_NAME" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="F_CAT_URL" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="F_CAT_PARENT_NAME" Type="nvarchar(max)" />
+    <Property Name="F_CAT_ID" Type="int" Nullable="false" />
+  </EntityType>
+  <Association Name="FK_Category_Category">
+    <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
+    <End Role="Category1" Type="Self.Category" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="F_CAT_ID" />
+      </Principal>
+      <Dependent Role="Category1">
+        <PropertyRef Name="F_PARENT_CAT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Product_Category">
+    <End Role="Category" Type="Self.Category" Multiplicity="1" />
+    <End Role="Product" Type="Self.Product" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Category">
+        <PropertyRef Name="F_CAT_ID" />
+      </Principal>
+      <Dependent Role="Product">
+        <PropertyRef Name="F_CAT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="P_INS_COSTPRODUCT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="product_id" Type="int" Mode="In" />
+    <Parameter Name="cost" Type="money" Mode="In" />
+  </Function>
+  <Function Name="PV_INS_CATEGORY" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="catname" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="catparentname" Type="nvarchar(max)" Mode="In" />
+    <Parameter Name="caturl" Type="nvarchar(max)" Mode="In" />
+  </Function>
+  <EntityContainer Name="Хранилище StartupModelContainer">
+    <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="V_CATEGORY" EntityType="Self.V_CATEGORY" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [V_CATEGORY].[F_CAT_NAME] AS [F_CAT_NAME], 
+    [V_CATEGORY].[F_CAT_URL] AS [F_CAT_URL], 
+    [V_CATEGORY].[F_CAT_PARENT_NAME] AS [F_CAT_PARENT_NAME], 
+    [V_CATEGORY].[F_CAT_ID] AS [F_CAT_ID]
+    FROM [dbo].[V_CATEGORY] AS [V_CATEGORY]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_Category_Category" Association="Self.FK_Category_Category">
+      <End Role="Category" EntitySet="Category" />
+      <End Role="Category1" EntitySet="Category" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
+      <End Role="Category" EntitySet="Category" />
+      <End Role="Product" EntitySet="Product" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

@@ -1,0 +1,14 @@
+D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\bin\Debug\TestEntity.exe.config
+D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\bin\Debug\TestEntity.exe
+D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\bin\Debug\TestEntity.pdb
+D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\bin\Debug\EntityFramework.dll
+D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\bin\Debug\EntityFramework.SqlServer.dll
+D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\bin\Debug\EntityFramework.xml
+D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\bin\Debug\EntityFramework.SqlServer.xml
+D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\bin\Debug\ru\EntityFramework.resources.dll
+D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\obj\Debug\TestEntity.csprojResolveAssemblyReference.cache
+D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\obj\Debug\TestEntity.exe
+D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\obj\Debug\TestEntity.pdb
+D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\bin\Debug\EntityFramework.Extended.dll
+D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\bin\Debug\EntityFramework.Extended.xml
+D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\bin\Debug\ru\EntityFramework.SqlServer.resources.dll

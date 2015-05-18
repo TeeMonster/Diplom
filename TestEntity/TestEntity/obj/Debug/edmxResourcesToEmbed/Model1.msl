@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="Хранилище StartupModelContainer" CdmEntityContainer="StartupEntities">
+    <EntitySetMapping Name="Category">
+      <EntityTypeMapping TypeName="StartupModel.Category">
+        <MappingFragment StoreEntitySet="Category">
+          <ScalarProperty Name="F_CAT_ID" ColumnName="F_CAT_ID" />
+          <ScalarProperty Name="F_PARENT_CAT_ID" ColumnName="F_PARENT_CAT_ID" />
+          <ScalarProperty Name="F_CAT_NAME" ColumnName="F_CAT_NAME" />
+          <ScalarProperty Name="F_CAT_URL" ColumnName="F_CAT_URL" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="V_CATEGORY">
+      <EntityTypeMapping TypeName="StartupModel.V_CATEGORY">
+        <MappingFragment StoreEntitySet="V_CATEGORY">
+          <ScalarProperty Name="F_CAT_ID" ColumnName="F_CAT_ID" />
+          <ScalarProperty Name="F_CAT_NAME" ColumnName="F_CAT_NAME" />
+          <ScalarProperty Name="F_CAT_URL" ColumnName="F_CAT_URL" />
+          <ScalarProperty Name="F_CAT_PARENT_NAME" ColumnName="F_CAT_PARENT_NAME" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="StartupModel.V_CATEGORY">
+        <ModificationFunctionMapping>
+          <InsertFunction FunctionName="Хранилище StartupModel.PV_INS_CATEGORY">
+            <ScalarProperty Name="F_CAT_URL" ParameterName="caturl" />
+            <ScalarProperty Name="F_CAT_PARENT_NAME" ParameterName="catparentname" />
+            <ScalarProperty Name="F_CAT_NAME" ParameterName="catname" />
+          </InsertFunction>
+        </ModificationFunctionMapping>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="PV_INS_CATEGORY" FunctionName="Хранилище StartupModel.PV_INS_CATEGORY" />
+    <EntitySetMapping Name="Product">
+      <EntityTypeMapping TypeName="StartupModel.Product">
+        <MappingFragment StoreEntitySet="Product">
+          <ScalarProperty Name="F_URL" ColumnName="F_URL" />
+          <ScalarProperty Name="F_INGREDIENT_ID" ColumnName="F_INGREDIENT_ID" />
+          <ScalarProperty Name="F_VES" ColumnName="F_VES" />
+          <ScalarProperty Name="F_NAME" ColumnName="F_NAME" />
+          <ScalarProperty Name="F_CAT_ID" ColumnName="F_CAT_ID" />
+          <ScalarProperty Name="F_PRODUCT_ID" ColumnName="F_PRODUCT_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="P_INS_COSTPRODUCT" FunctionName="Хранилище StartupModel.P_INS_COSTPRODUCT" />
+  </EntityContainerMapping>
+</Mapping>
