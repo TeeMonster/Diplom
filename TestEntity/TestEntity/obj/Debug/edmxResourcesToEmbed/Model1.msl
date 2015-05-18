@@ -44,5 +44,57 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <FunctionImportMapping FunctionImportName="P_INS_COSTPRODUCT" FunctionName="Хранилище StartupModel.P_INS_COSTPRODUCT" />
+    <EntitySetMapping Name="CategoryRecipes">
+      <EntityTypeMapping TypeName="StartupModel.CategoryRecipes">
+        <MappingFragment StoreEntitySet="CategoryRecipes">
+          <ScalarProperty Name="F_CAT_URL" ColumnName="F_CAT_URL" />
+          <ScalarProperty Name="F_CAT_NAME" ColumnName="F_CAT_NAME" />
+          <ScalarProperty Name="F_CATEGORY_ID" ColumnName="F_CATEGORY_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="CostProduct">
+      <EntityTypeMapping TypeName="StartupModel.CostProduct">
+        <MappingFragment StoreEntitySet="CostProduct">
+          <ScalarProperty Name="F_PRODUCT_ID" ColumnName="F_PRODUCT_ID" />
+          <ScalarProperty Name="F_DATETO" ColumnName="F_DATETO" />
+          <ScalarProperty Name="F_DATEFROM" ColumnName="F_DATEFROM" />
+          <ScalarProperty Name="F_COST" ColumnName="F_COST" />
+          <ScalarProperty Name="F_COST_ID" ColumnName="F_COST_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Ingredients">
+      <EntityTypeMapping TypeName="StartupModel.Ingredients">
+        <MappingFragment StoreEntitySet="Ingredients">
+          <ScalarProperty Name="F_NAME" ColumnName="F_NAME" />
+          <ScalarProperty Name="F_INGREDIENT_ID" ColumnName="F_INGREDIENT_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Recipes">
+      <EntityTypeMapping TypeName="StartupModel.Recipes">
+        <MappingFragment StoreEntitySet="Recipes">
+          <ScalarProperty Name="F_FATS" ColumnName="F_FATS" />
+          <ScalarProperty Name="F_CARBONYDRATES" ColumnName="F_CARBONYDRATES" />
+          <ScalarProperty Name="F_PROTEINS" ColumnName="F_PROTEINS" />
+          <ScalarProperty Name="F_CALORIES" ColumnName="F_CALORIES" />
+          <ScalarProperty Name="F_URL" ColumnName="F_URL" />
+          <ScalarProperty Name="F_NAME" ColumnName="F_NAME" />
+          <ScalarProperty Name="F_CAT_ID" ColumnName="F_CAT_ID" />
+          <ScalarProperty Name="F_RECIPE_ID" ColumnName="F_RECIPE_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Structure">
+      <EntityTypeMapping TypeName="StartupModel.Structure">
+        <MappingFragment StoreEntitySet="Structure">
+          <ScalarProperty Name="F_ID" ColumnName="F_ID" />
+          <ScalarProperty Name="F_RECIPE_ID" ColumnName="F_RECIPE_ID" />
+          <ScalarProperty Name="F_VES" ColumnName="F_VES" />
+          <ScalarProperty Name="F_INGREDIENT_ID" ColumnName="F_INGREDIENT_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

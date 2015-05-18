@@ -30,6 +30,11 @@ namespace TestEntity
         public virtual DbSet<Category> Category { get; set; }
         public virtual DbSet<V_CATEGORY> V_CATEGORY { get; set; }
         public virtual DbSet<Product> Product { get; set; }
+        public virtual DbSet<CategoryRecipes> CategoryRecipes { get; set; }
+        public virtual DbSet<CostProduct> CostProduct { get; set; }
+        public virtual DbSet<Ingredients> Ingredients { get; set; }
+        public virtual DbSet<Recipes> Recipes { get; set; }
+        public virtual DbSet<Structure> Structure { get; set; }
     
         public virtual int PV_INS_CATEGORY(string catname, string catparentname, string caturl)
         {

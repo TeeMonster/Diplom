@@ -12,3 +12,17 @@ D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\obj\D
 D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\bin\Debug\EntityFramework.Extended.dll
 D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\bin\Debug\EntityFramework.Extended.xml
 D:\учеба\5 курс\Диплом\Обкатка\TestEntity\TestEntity\bin\Debug\ru\EntityFramework.SqlServer.resources.dll
+C:\Users\HarrySt\Documents\GitHub\Diplom\TestEntity\TestEntity\bin\Debug\TestEntity.exe.config
+C:\Users\HarrySt\Documents\GitHub\Diplom\TestEntity\TestEntity\obj\Debug\TestEntity.exe
+C:\Users\HarrySt\Documents\GitHub\Diplom\TestEntity\TestEntity\obj\Debug\TestEntity.pdb
+C:\Users\HarrySt\Documents\GitHub\Diplom\TestEntity\TestEntity\obj\Debug\TestEntity.csprojResolveAssemblyReference.cache
+C:\Users\HarrySt\Documents\GitHub\Diplom\TestEntity\TestEntity\bin\Debug\TestEntity.exe
+C:\Users\HarrySt\Documents\GitHub\Diplom\TestEntity\TestEntity\bin\Debug\TestEntity.pdb
+C:\Users\HarrySt\Documents\GitHub\Diplom\TestEntity\TestEntity\bin\Debug\EntityFramework.dll
+C:\Users\HarrySt\Documents\GitHub\Diplom\TestEntity\TestEntity\bin\Debug\EntityFramework.Extended.dll
+C:\Users\HarrySt\Documents\GitHub\Diplom\TestEntity\TestEntity\bin\Debug\EntityFramework.SqlServer.dll
+C:\Users\HarrySt\Documents\GitHub\Diplom\TestEntity\TestEntity\bin\Debug\EntityFramework.xml
+C:\Users\HarrySt\Documents\GitHub\Diplom\TestEntity\TestEntity\bin\Debug\EntityFramework.Extended.xml
+C:\Users\HarrySt\Documents\GitHub\Diplom\TestEntity\TestEntity\bin\Debug\EntityFramework.SqlServer.xml
+C:\Users\HarrySt\Documents\GitHub\Diplom\TestEntity\TestEntity\bin\Debug\ru\EntityFramework.resources.dll
+C:\Users\HarrySt\Documents\GitHub\Diplom\TestEntity\TestEntity\bin\Debug\ru\EntityFramework.SqlServer.resources.dll

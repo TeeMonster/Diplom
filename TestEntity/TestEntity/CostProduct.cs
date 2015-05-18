@@ -12,21 +12,14 @@ namespace TestEntity
     using System;
     using System.Collections.Generic;
     
-    public partial class Product
+    public partial class CostProduct
     {
-        public Product()
-        {
-            this.CostProduct = new HashSet<CostProduct>();
-        }
-    
+        public long F_COST_ID { get; set; }
+        public decimal F_COST { get; set; }
+        public System.DateTime F_DATEFROM { get; set; }
+        public System.DateTime F_DATETO { get; set; }
         public int F_PRODUCT_ID { get; set; }
-        public int F_CAT_ID { get; set; }
-        public string F_NAME { get; set; }
-        public float F_VES { get; set; }
-        public Nullable<int> F_INGREDIENT_ID { get; set; }
-        public string F_URL { get; set; }
     
-        public virtual Category Category { get; set; }
-        public virtual ICollection<CostProduct> CostProduct { get; set; }
+        public virtual Product Product { get; set; }
     }
 }

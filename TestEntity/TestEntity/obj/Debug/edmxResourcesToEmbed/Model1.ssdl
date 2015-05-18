@@ -9,6 +9,31 @@
     <Property Name="F_CAT_NAME" Type="nvarchar(max)" Nullable="false" />
     <Property Name="F_CAT_URL" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
+  <EntityType Name="CategoryRecipes">
+    <Key>
+      <PropertyRef Name="F_CATEGORY_ID" />
+    </Key>
+    <Property Name="F_CATEGORY_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="F_CAT_NAME" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="F_CAT_URL" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="CostProduct">
+    <Key>
+      <PropertyRef Name="F_COST_ID" />
+    </Key>
+    <Property Name="F_COST_ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="F_COST" Type="money" Nullable="false" />
+    <Property Name="F_DATEFROM" Type="date" Nullable="false" />
+    <Property Name="F_DATETO" Type="date" Nullable="false" />
+    <Property Name="F_PRODUCT_ID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Ingredients">
+    <Key>
+      <PropertyRef Name="F_INGREDIENT_ID" />
+    </Key>
+    <Property Name="F_INGREDIENT_ID" Type="int" Nullable="false" />
+    <Property Name="F_NAME" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
   <EntityType Name="Product">
     <Key>
       <PropertyRef Name="F_PRODUCT_ID" />
@@ -19,6 +44,28 @@
     <Property Name="F_VES" Type="real" Nullable="false" />
     <Property Name="F_INGREDIENT_ID" Type="int" />
     <Property Name="F_URL" Type="nvarchar(max)" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Recipes">
+    <Key>
+      <PropertyRef Name="F_RECIPE_ID" />
+    </Key>
+    <Property Name="F_RECIPE_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="F_CAT_ID" Type="int" />
+    <Property Name="F_NAME" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="F_URL" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="F_CALORIES" Type="numeric" Precision="8" Scale="2" Nullable="false" />
+    <Property Name="F_PROTEINS" Type="numeric" Precision="8" Scale="2" Nullable="false" />
+    <Property Name="F_CARBONYDRATES" Type="numeric" Precision="8" Scale="2" Nullable="false" />
+    <Property Name="F_FATS" Type="numeric" Precision="8" Scale="2" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Structure">
+    <Key>
+      <PropertyRef Name="F_ID" />
+    </Key>
+    <Property Name="F_INGREDIENT_ID" Type="int" Nullable="false" />
+    <Property Name="F_VES" Type="numeric" Precision="8" Scale="2" Nullable="false" />
+    <Property Name="F_RECIPE_ID" Type="int" Nullable="false" />
+    <Property Name="F_ID" Type="bigint" Nullable="false" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "Startup.dbo.V_CATEGORY" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -43,6 +90,18 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_CostProduct_Product">
+    <End Role="Product" Type="Self.Product" Multiplicity="1" />
+    <End Role="CostProduct" Type="Self.CostProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="F_PRODUCT_ID" />
+      </Principal>
+      <Dependent Role="CostProduct">
+        <PropertyRef Name="F_PRODUCT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Product_Category">
     <End Role="Category" Type="Self.Category" Multiplicity="1" />
     <End Role="Product" Type="Self.Product" Multiplicity="*" />
@@ -52,6 +111,42 @@
       </Principal>
       <Dependent Role="Product">
         <PropertyRef Name="F_CAT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Recipes_CategoryRecipes">
+    <End Role="CategoryRecipes" Type="Self.CategoryRecipes" Multiplicity="0..1" />
+    <End Role="Recipes" Type="Self.Recipes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CategoryRecipes">
+        <PropertyRef Name="F_CATEGORY_ID" />
+      </Principal>
+      <Dependent Role="Recipes">
+        <PropertyRef Name="F_CAT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Structure_Ingredients">
+    <End Role="Ingredients" Type="Self.Ingredients" Multiplicity="1" />
+    <End Role="Structure" Type="Self.Structure" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Ingredients">
+        <PropertyRef Name="F_INGREDIENT_ID" />
+      </Principal>
+      <Dependent Role="Structure">
+        <PropertyRef Name="F_INGREDIENT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Structure_Recipes1">
+    <End Role="Recipes" Type="Self.Recipes" Multiplicity="1" />
+    <End Role="Structure" Type="Self.Structure" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Recipes">
+        <PropertyRef Name="F_RECIPE_ID" />
+      </Principal>
+      <Dependent Role="Structure">
+        <PropertyRef Name="F_RECIPE_ID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -66,7 +161,12 @@
   </Function>
   <EntityContainer Name="Хранилище StartupModelContainer">
     <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CategoryRecipes" EntityType="Self.CategoryRecipes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="CostProduct" EntityType="Self.CostProduct" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Ingredients" EntityType="Self.Ingredients" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Recipes" EntityType="Self.Recipes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Structure" EntityType="Self.Structure" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="V_CATEGORY" EntityType="Self.V_CATEGORY" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [V_CATEGORY].[F_CAT_NAME] AS [F_CAT_NAME], 
@@ -79,9 +179,25 @@
       <End Role="Category" EntitySet="Category" />
       <End Role="Category1" EntitySet="Category" />
     </AssociationSet>
+    <AssociationSet Name="FK_CostProduct_Product" Association="Self.FK_CostProduct_Product">
+      <End Role="Product" EntitySet="Product" />
+      <End Role="CostProduct" EntitySet="CostProduct" />
+    </AssociationSet>
     <AssociationSet Name="FK_Product_Category" Association="Self.FK_Product_Category">
       <End Role="Category" EntitySet="Category" />
       <End Role="Product" EntitySet="Product" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Recipes_CategoryRecipes" Association="Self.FK_Recipes_CategoryRecipes">
+      <End Role="CategoryRecipes" EntitySet="CategoryRecipes" />
+      <End Role="Recipes" EntitySet="Recipes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Structure_Ingredients" Association="Self.FK_Structure_Ingredients">
+      <End Role="Ingredients" EntitySet="Ingredients" />
+      <End Role="Structure" EntitySet="Structure" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Structure_Recipes1" Association="Self.FK_Structure_Recipes1">
+      <End Role="Recipes" EntitySet="Recipes" />
+      <End Role="Structure" EntitySet="Structure" />
     </AssociationSet>
   </EntityContainer>
 </Schema>

@@ -70,10 +70,7 @@ namespace TestEntity
                     string catname;
                     foreach (Match mat in matches)
                     {
-                        //Console.WriteLine("Значение найденного обьекта {0}", mat.Value);
-                        //Console.ReadLine();
                         matchcaturl = recaturl.Matches(mat.Value);
-                        //Console.WriteLine(matchcaturl[0].Value);
                         urlcat = site + matchcaturl[0].Value.ToString().Trim('"');
                         matchcatname = recatname.Matches(mat.Value);
                         catname = matchcatname[0].Value;
@@ -171,16 +168,6 @@ namespace TestEntity
                 //{   
                 //    othercontext.P_INS_COSTPRODUCT(Convert.ToInt32(c.F_PRODUCT_ID), costf(c.F_URL));
                 //});
-                //foreach(Product p in q)
-                //{
-                //    int productid = Convert.ToInt32(p.F_PRODUCT_ID);
-                //    decimal cost=costf(p.F_URL);
-                //    Console.WriteLine(productid);
-                //    Console.WriteLine(cost);
-                //    othercontext.P_INS_COSTPRODUCT(productid, cost);
-                //    //st.SaveChanges();
-                //    Console.WriteLine(p.F_PRODUCT_ID);
-                //}
             }
 
             public void GoFirstParse()
@@ -220,12 +207,10 @@ namespace TestEntity
                 sr = new StreamReader(resp.GetResponseStream(), Encoding.UTF8);
                 string content = sr.ReadToEnd();
                 sr.Close();
-                //content = content.Replace(ish, zam);
                 /*парсим товары название цена вес ссылку на товар*/
                 content = content.Replace(@"class=""goods_view", "~");
                 Regex retmp = new Regex(sregetmp);
                 Regex rename = new Regex(sregename);
-                Regex recost = new Regex(sregecost);
                 Regex reves = new Regex(sregeves);
                 Regex reurl = new Regex(sregeurl);
                 MatchCollection matchtovar = retmp.Matches(content);
@@ -236,19 +221,12 @@ namespace TestEntity
                 foreach (Match mattovar in matchtovar)
                 {
                     matchurl = reurl.Match(mattovar.Value);
-                    //matchcost = recost.Match(mattovar.Value);
                     matchname = rename.Match(mattovar.Value);
                     matchves = reves.Match(mattovar.Value);
                     Product p = new Product { F_CAT_ID = cat_id, F_NAME = matchname.Value.Trim('"').Trim('\''), F_URL = site + matchurl.Value, F_VES = (float)Convert.ToDouble(matchves.Value) };
                     lp.Add(p);
-                    //Console.WriteLine(matchurl[0].Value);
-                    //Console.WriteLine(matchcost[0].Value);
-                    //Console.WriteLine(matchname[0].Value);
-                    //Console.WriteLine(matchves[0].Value);
-                    //Console.ReadLine();
                 }
                 Regex renext = new Regex(sregenext);
-                //Console.WriteLine(content);
                 MatchCollection matchnexturl= renext.Matches(content);
                 foreach (Match mat in matchnexturl)
                 {
@@ -261,6 +239,85 @@ namespace TestEntity
                 }
                 return lp;
                 /*достаем ссылку на следующую страницу категории, и скармливаем ее если ее нет конец */
+            }
+        }
+
+        class ParserRecipes
+        {
+            StartupEntities st;
+            private string site = "http://daily-menu.ru";
+            string sregenexturl = @"(?<=<li class=""next""><a href="")([^<]?)*(?="">)";
+            string sregerecipeurl = @"";
+            string sregerecipename = @"";
+            string sregeingredients = @"";
+            string sregeingredientsweight = @"";
+            string sregenutritional = @"";
+
+            public ParserRecipes()
+            {
+
+            }
+
+            List<string> GetURLs(string urlcat)
+            {
+                List<string> res = new List<string>();
+                HttpWebRequest req;
+                HttpWebResponse resp;
+                StreamReader sr;
+                req = (HttpWebRequest)WebRequest.Create(urlcat);
+                resp = (HttpWebResponse)req.GetResponse();
+                sr = new StreamReader(resp.GetResponseStream(), Encoding.UTF8);
+                string content = sr.ReadToEnd();
+                sr.Close();
+                Regex regenexturl = new Regex(sregenexturl);
+                Match matchnexturl = regenexturl.Match(content);
+                string snexturl=site+matchnexturl.Value;
+                if (matchnexturl.Success) { res.Add(snexturl); res.AddRange(GetURLs(snexturl)); } else { snexturl = null; }
+                return res;
+            }
+
+            List<Recipes> ParseRecipes(int icatid, string urlcat)
+            {
+                List<Recipes> lr = new List<Recipes>();
+                HttpWebRequest req;
+                HttpWebResponse resp;
+                StreamReader sr;
+                req = (HttpWebRequest)WebRequest.Create(urlcat);
+                resp = (HttpWebResponse)req.GetResponse();
+                sr = new StreamReader(resp.GetResponseStream(), Encoding.UTF8);
+                string content = sr.ReadToEnd();
+                sr.Close();
+                
+                
+               
+                ///lr.AddRange(ParseRecipes(icatid, matchnexturl.Value));
+                return lr;
+            }
+
+            public void GoPasre()
+            {
+                using (st = new StartupEntities())
+                {
+                    var q = from p in st.CategoryRecipes
+                            select p;
+                    //foreach(CategoryRecipes p in q)
+                    //{
+                      //  List<string> lg= GetURLs(p.F_CAT_URL);
+                    //}
+                    Parallel.ForEach(q, c => {
+                        //lr.AddRange(ParseRecipes(Convert.ToInt16(c.F_CATEGORY_ID), c.F_CAT_URL));
+                        List<string> lg = GetURLs(c.F_CAT_URL);
+                        foreach(string s in lg)
+                        {
+                            LoadToDB(ParseRecipes(c.F_CATEGORY_ID, s));
+                        }
+                    });
+                }
+            }
+
+            void LoadToDB(List<Recipes> lr)
+            {
+
             }
         }
 
@@ -312,10 +369,12 @@ namespace TestEntity
         {
             //ParserCat pc = new ParserCat();
             //pc.GoParse("http://www.utkonos.ru/cat/1", "");
-            ParserProduct pc = new ParserProduct();
-            pc.ParseCost();
+            //ParserProduct pc = new ParserProduct();
+            //pc.ParseCost();
             //ForTest fr = new ForTest();
             //fr.Test();
+            ParserRecipes pr = new ParserRecipes();
+            pr.GoPasre();
             //Console.WriteLine(content);
             //Console.ReadLine();
             //string filename;

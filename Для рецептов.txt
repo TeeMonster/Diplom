@@ -1,0 +1,34 @@
+Переход на следующую страницу <li class="next hidden"><a href="/dailymenu/recipes/index?DailymenuRecipes_page=100">
+/dailymenu/recipes/list/93?DailymenuRecipes_page=2
+но необходимо сравнивать с текущей, так как не всегда можно перейти на следующую, если текущая равна следующей, то конец.
+http://daily-menu.ru/dailymenu/recipes/list/93 - салаты и закуски.
+http://daily-menu.ru/dailymenu/recipes/list/37 - первые блюда.
+http://daily-menu.ru/dailymenu/recipes/list/98 - вторые блюда.
+http://daily-menu.ru/dailymenu/recipes/list/32 - десерты и выпечка.
+
+<article class="recipe_anounce">
+    <a href="/dailymenu/recipes/view/31245"> - рецепты в каталоге.
+надо пересчитывать или
+<td><strong>На 1 порцию:</strong></td>
+                            <td class="variable"><strong>221</strong></td> вес порции (стоимость блюда на порцию)
+                            <td class="variable"><strong>277</strong></td> калории
+                            <td class="variable"><strong>33</strong></td> белки
+                            <td class="variable"><strong>10.5</strong></td> жиры 
+                            <td class="variable"><strong>12.7</strong></td> углеводы
+ ингредиенты, нас интересует имя ингредиента и его вес
+<td itemprop="ingredients">Соль поваренная пищевая</td>
+                                <td class="variable">1</td>
+                                <td class="variable">-</td>
+                                <td class="variable">-</td>
+                                <td class="variable">-</td>
+                                <td class="variable">-</td>
+                            </tr>
+                                                    <tr>
+                                <td itemprop="ingredients">Крахмал кукурузный</td>
+                                <td class="variable">15</td>
+                                <td class="variable">54</td>
+                                <td class="variable">0</td>
+                                <td class="variable">0</td>
+                                <td class="variable">13</td>
+                            </tr>
+<meta name="og:title" content="Котлетки из печени" /> - название рецепта

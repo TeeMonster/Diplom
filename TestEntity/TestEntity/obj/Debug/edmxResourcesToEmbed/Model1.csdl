@@ -54,6 +54,27 @@
       <Parameter Name="product_id" Mode="In" Type="Int32" />
       <Parameter Name="cost" Mode="In" Type="Decimal" />
     </FunctionImport>
+    <EntitySet Name="CategoryRecipes" EntityType="StartupModel.CategoryRecipes" />
+    <EntitySet Name="CostProduct" EntityType="StartupModel.CostProduct" />
+    <EntitySet Name="Ingredients" EntityType="StartupModel.Ingredients" />
+    <EntitySet Name="Recipes" EntityType="StartupModel.Recipes" />
+    <EntitySet Name="Structure" EntityType="StartupModel.Structure" />
+    <AssociationSet Name="FK_Recipes_CategoryRecipes" Association="StartupModel.FK_Recipes_CategoryRecipes">
+      <End Role="CategoryRecipes" EntitySet="CategoryRecipes" />
+      <End Role="Recipes" EntitySet="Recipes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_CostProduct_Product" Association="StartupModel.FK_CostProduct_Product">
+      <End Role="Product" EntitySet="Product" />
+      <End Role="CostProduct" EntitySet="CostProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Structure_Ingredients" Association="StartupModel.FK_Structure_Ingredients">
+      <End Role="Ingredients" EntitySet="Ingredients" />
+      <End Role="Structure" EntitySet="Structure" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Structure_Recipes1" Association="StartupModel.FK_Structure_Recipes1">
+      <End Role="Recipes" EntitySet="Recipes" />
+      <End Role="Structure" EntitySet="Structure" />
+    </AssociationSet>
   </EntityContainer>
   <EntityType Name="Product">
     <Key>
@@ -66,6 +87,7 @@
     <Property Name="F_INGREDIENT_ID" Type="Int32" />
     <Property Name="F_URL" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="Category" Relationship="StartupModel.FK_Product_Category" FromRole="Product" ToRole="Category" />
+    <NavigationProperty Name="CostProduct" Relationship="StartupModel.FK_CostProduct_Product" FromRole="Product" ToRole="CostProduct" />
   </EntityType>
   <Association Name="FK_Product_Category">
     <End Type="StartupModel.Category" Role="Category" Multiplicity="1" />
@@ -76,6 +98,108 @@
       </Principal>
       <Dependent Role="Product">
         <PropertyRef Name="F_CAT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="CategoryRecipes">
+    <Key>
+      <PropertyRef Name="F_CATEGORY_ID" />
+    </Key>
+    <Property Name="F_CATEGORY_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="F_CAT_NAME" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="F_CAT_URL" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Recipes" Relationship="StartupModel.FK_Recipes_CategoryRecipes" FromRole="CategoryRecipes" ToRole="Recipes" />
+  </EntityType>
+  <EntityType Name="CostProduct">
+    <Key>
+      <PropertyRef Name="F_COST_ID" />
+    </Key>
+    <Property Name="F_COST_ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="F_COST" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="F_DATEFROM" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="F_DATETO" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="F_PRODUCT_ID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Product" Relationship="StartupModel.FK_CostProduct_Product" FromRole="CostProduct" ToRole="Product" />
+  </EntityType>
+  <EntityType Name="Ingredients">
+    <Key>
+      <PropertyRef Name="F_INGREDIENT_ID" />
+    </Key>
+    <Property Name="F_INGREDIENT_ID" Type="Int32" Nullable="false" />
+    <Property Name="F_NAME" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Structure" Relationship="StartupModel.FK_Structure_Ingredients" FromRole="Ingredients" ToRole="Structure" />
+  </EntityType>
+  <EntityType Name="Recipes">
+    <Key>
+      <PropertyRef Name="F_RECIPE_ID" />
+    </Key>
+    <Property Name="F_RECIPE_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="F_CAT_ID" Type="Int32" />
+    <Property Name="F_NAME" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="F_URL" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="F_CALORIES" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
+    <Property Name="F_PROTEINS" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
+    <Property Name="F_CARBONYDRATES" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
+    <Property Name="F_FATS" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
+    <NavigationProperty Name="CategoryRecipes" Relationship="StartupModel.FK_Recipes_CategoryRecipes" FromRole="Recipes" ToRole="CategoryRecipes" />
+    <NavigationProperty Name="Structure" Relationship="StartupModel.FK_Structure_Recipes1" FromRole="Recipes" ToRole="Structure" />
+  </EntityType>
+  <EntityType Name="Structure">
+    <Key>
+      <PropertyRef Name="F_ID" />
+    </Key>
+    <Property Name="F_INGREDIENT_ID" Type="Int32" Nullable="false" />
+    <Property Name="F_VES" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
+    <Property Name="F_RECIPE_ID" Type="Int32" Nullable="false" />
+    <Property Name="F_ID" Type="Int64" Nullable="false" />
+    <NavigationProperty Name="Ingredients" Relationship="StartupModel.FK_Structure_Ingredients" FromRole="Structure" ToRole="Ingredients" />
+    <NavigationProperty Name="Recipes" Relationship="StartupModel.FK_Structure_Recipes1" FromRole="Structure" ToRole="Recipes" />
+  </EntityType>
+  <Association Name="FK_Recipes_CategoryRecipes">
+    <End Type="StartupModel.CategoryRecipes" Role="CategoryRecipes" Multiplicity="0..1" />
+    <End Type="StartupModel.Recipes" Role="Recipes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="CategoryRecipes">
+        <PropertyRef Name="F_CATEGORY_ID" />
+      </Principal>
+      <Dependent Role="Recipes">
+        <PropertyRef Name="F_CAT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_CostProduct_Product">
+    <End Type="StartupModel.Product" Role="Product" Multiplicity="1" />
+    <End Type="StartupModel.CostProduct" Role="CostProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="F_PRODUCT_ID" />
+      </Principal>
+      <Dependent Role="CostProduct">
+        <PropertyRef Name="F_PRODUCT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Structure_Ingredients">
+    <End Type="StartupModel.Ingredients" Role="Ingredients" Multiplicity="1" />
+    <End Type="StartupModel.Structure" Role="Structure" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Ingredients">
+        <PropertyRef Name="F_INGREDIENT_ID" />
+      </Principal>
+      <Dependent Role="Structure">
+        <PropertyRef Name="F_INGREDIENT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Structure_Recipes1">
+    <End Type="StartupModel.Recipes" Role="Recipes" Multiplicity="1" />
+    <End Type="StartupModel.Structure" Role="Structure" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Recipes">
+        <PropertyRef Name="F_RECIPE_ID" />
+      </Principal>
+      <Dependent Role="Structure">
+        <PropertyRef Name="F_RECIPE_ID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
