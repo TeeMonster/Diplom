@@ -4,11 +4,12 @@
 http://daily-menu.ru/dailymenu/recipes/list/93 - салаты и закуски.
 http://daily-menu.ru/dailymenu/recipes/list/37 - первые блюда.
 http://daily-menu.ru/dailymenu/recipes/list/98 - вторые блюда.
-http://daily-menu.ru/dailymenu/recipes/list/32 - десерты и выпечка.
+http://daily-menu.ru/dailymenu/recipes/list/32 - десерты и выпечка. - нахер
 
 <article class="recipe_anounce">
     <a href="/dailymenu/recipes/view/31245"> - рецепты в каталоге.
 надо пересчитывать или
+надо подготовить!
 <td><strong>На 1 порцию:</strong></td>
                             <td class="variable"><strong>221</strong></td> вес порции (стоимость блюда на порцию)
                             <td class="variable"><strong>277</strong></td> калории
@@ -32,3 +33,6 @@ http://daily-menu.ru/dailymenu/recipes/list/32 - десерты и выпечка.
                                 <td class="variable">13</td>
                             </tr>
 <meta name="og:title" content="Котлетки из печени" /> - название рецепта
+
+<td itemprop="ingredients">Свекла</td>
+                                <td class="variable">200</td>

@@ -247,11 +247,13 @@ namespace TestEntity
             StartupEntities st;
             private string site = "http://daily-menu.ru";
             string sregenexturl = @"(?<=<li class=""next""><a href="")([^<]?)*(?="">)";
-            string sregerecipeurl = @"";
-            string sregerecipename = @"";
-            string sregeingredients = @"";
-            string sregeingredientsweight = @"";
-            string sregenutritional = @"";
+            //string sregerecipeurl = @"(?<=<article class=""recipe_anounce""><a href="")([^<]?)*(?="">)";
+            string sregerecipeurl=@"(?<=<a href="")([^<]?)*(?=""><img class=""recipe_preview"")";
+            string sregerecipename = @"(?<=<meta name=""og:title"" content="")([^<]?)*(?="" />)";
+            string sregeingredients = @"(?<=itemprop=""ingredients"">)([^<]?)*(?=</td>)";
+            string sregeingredientsweight = @"(?<=class=""variable"">)([0-9,\.]|-)+(?=</td)";
+            string sregetmpnutr = @"(?<=На 1 порцию:</strong></td>)([^Н]?)*(?=<td><strong>На 100)";
+            string sregenutritional = @"(?<=<strong>).*(?=</strong>)";
 
             public ParserRecipes()
             {
@@ -276,9 +278,9 @@ namespace TestEntity
                 return res;
             }
 
-            List<Recipes> ParseRecipes(int icatid, string urlcat)
+            List<Rec> ParseRecipes(int icatid, string urlcat)
             {
-                List<Recipes> lr = new List<Recipes>();
+                List<Rec> lr = new List<Rec>();
                 HttpWebRequest req;
                 HttpWebResponse resp;
                 StreamReader sr;
@@ -287,11 +289,95 @@ namespace TestEntity
                 sr = new StreamReader(resp.GetResponseStream(), Encoding.UTF8);
                 string content = sr.ReadToEnd();
                 sr.Close();
-                
-                
-               
+                Regex regerecipeurl = new Regex(sregerecipeurl);
+                MatchCollection matchesrecurl = regerecipeurl.Matches(content);
+                string surlrecipe;
+                Console.WriteLine(matchesrecurl.Count);
+                foreach(Match m in matchesrecurl)
+                {
+                    surlrecipe = site + m.Value;
+                    lr.Add(GetRecipe(surlrecipe, icatid));
+                    //Console.ReadLine();
+                }
                 ///lr.AddRange(ParseRecipes(icatid, matchnexturl.Value));
                 return lr;
+            }
+
+            struct Rec{
+                   public Recipes r;
+                   public List<Ingredients> i;
+                   public List<Structure> str;
+             }
+
+            Rec GetRecipe(string urlrecipe, int icatid)
+            {
+                Console.WriteLine("зашло в  гет рецепт");
+                Rec st = new Rec();
+                st.str = new List<Structure>();
+                st.i = new List<Ingredients>();
+                HttpWebRequest req;
+                HttpWebResponse resp;
+                StreamReader sr;
+                req = (HttpWebRequest)WebRequest.Create(urlrecipe);
+                resp = (HttpWebResponse)req.GetResponse();
+                sr = new StreamReader(resp.GetResponseStream(), Encoding.UTF8);
+                string content = sr.ReadToEnd();
+                sr.Close();
+                Regex regerecname = new Regex(sregerecipename);
+                Match mrecname = regerecname.Match(content);
+                Regex regetmpnutr = new Regex(sregetmpnutr);
+                Match mtmp = regetmpnutr.Match(content);
+                Regex regenutritional = new Regex(sregenutritional);
+                MatchCollection mnutritional = regenutritional.Matches(mtmp.Value);
+                Console.WriteLine(mtmp.Value);
+                Recipes rec = new Recipes { F_URL = urlrecipe, F_CAT_ID = icatid, F_NAME = mrecname.Value, F_CALORIES = mnutritional[1].Value == "-" ? 0 : Convert.ToDecimal(mnutritional[1].Value.Replace('.', ',')), F_PROTEINS = mnutritional[2].Value == "-" ? 0 : Convert.ToDecimal(mnutritional[2].Value.Replace('.', ',')), F_FATS = mnutritional[3].Value == "-" ? 0 : Convert.ToDecimal(mnutritional[3].Value.Replace('.', ',')), F_CARBONYDRATES = mnutritional[4].Value == "-" ? 0 : Convert.ToDecimal(mnutritional[4].Value.Replace('.', ',')) };
+                st.r = rec;
+                Console.WriteLine(rec.F_URL+" "+rec.F_CAT_ID.ToString()+" "+rec.F_NAME+" "+rec.F_CALORIES.ToString()+rec.F_PROTEINS.ToString()+" "+rec.F_FATS.ToString()+" "+rec.F_CARBONYDRATES.ToString());
+                Regex regeingredients = new Regex(sregeingredients);
+                MatchCollection matchingr = regeingredients.Matches(content);
+                Regex regeingrweight = new Regex(sregeingredientsweight);
+                MatchCollection matchweight = regeingrweight.Matches(content);
+                foreach(Match m in matchweight)
+                {
+                    Console.WriteLine(m.Value);
+                }
+                int i=0;
+                foreach(Match m in matchingr)
+                {
+                    st.i.Add(new Ingredients { F_NAME=m.Value});
+                    st.str.Add(new Structure { F_VES = Convert.ToDecimal(matchweight[i * 5].Value.Replace('.',','))});
+
+                    //Console.WriteLine(m.Value);
+                    //Console.WriteLine(matchweight[i*5].Value);
+                    i++;
+                }
+                //Console.ReadLine();
+                
+                return st;
+            }
+
+            int LoadToDBRec(Recipes rec)
+            {
+                int id;
+                using(st=new StartupEntities())
+                {
+                    st.Recipes.Add(rec);
+                    st.SaveChanges();
+                    var q= from p in st.Recipes
+                           where p.F_NAME==rec.F_NAME && p.F_CARBONYDRATES==rec.F_CARBONYDRATES && p.F_PROTEINS==rec.F_PROTEINS
+                           select p.F_RECIPE_ID;
+                    id=q.First(x=>1==1);
+                }
+                return id;
+            }
+
+            void LoadToDB(List<Rec> lr)
+            {
+                foreach(Rec r in lr)
+                {
+                    Console.WriteLine(LoadToDBRec(r.r));
+                    Console.ReadLine();
+                }
             }
 
             public void GoPasre()
@@ -300,24 +386,23 @@ namespace TestEntity
                 {
                     var q = from p in st.CategoryRecipes
                             select p;
-                    //foreach(CategoryRecipes p in q)
-                    //{
-                      //  List<string> lg= GetURLs(p.F_CAT_URL);
-                    //}
-                    Parallel.ForEach(q, c => {
-                        //lr.AddRange(ParseRecipes(Convert.ToInt16(c.F_CATEGORY_ID), c.F_CAT_URL));
+                    foreach (CategoryRecipes c in q)
+                    {
                         List<string> lg = GetURLs(c.F_CAT_URL);
-                        foreach(string s in lg)
+                        //Console.WriteLine("catid="+c.F_CATEGORY_ID.ToString());
+                        foreach (string s in lg)
                         {
-                            LoadToDB(ParseRecipes(c.F_CATEGORY_ID, s));
+                          LoadToDB(ParseRecipes(c.F_CATEGORY_ID, s));
                         }
-                    });
+                    }
+                    //Parallel.ForEach(q, c => {
+                    //    List<string> lg = GetURLs(c.F_CAT_URL);
+                    //    foreach(string s in lg)
+                    //    {
+                    //        ParseRecipes(c.F_CATEGORY_ID, s);
+                    //    }
+                    //});
                 }
-            }
-
-            void LoadToDB(List<Recipes> lr)
-            {
-
             }
         }
 
