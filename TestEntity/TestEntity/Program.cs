@@ -84,7 +84,6 @@ namespace TestEntity
                 }
                 else
                 {
-
                 }
             }
             //void UpdateToDB(string catname)
@@ -358,25 +357,87 @@ namespace TestEntity
 
             int LoadToDBRec(Recipes rec)
             {
-                int id;
+                int id=-1;
                 using(st=new StartupEntities())
                 {
-                    st.Recipes.Add(rec);
-                    st.SaveChanges();
-                    var q= from p in st.Recipes
-                           where p.F_NAME==rec.F_NAME && p.F_CARBONYDRATES==rec.F_CARBONYDRATES && p.F_PROTEINS==rec.F_PROTEINS
-                           select p.F_RECIPE_ID;
-                    id=q.First(x=>1==1);
+                    var q = from p in st.Recipes
+                            where p.F_NAME == rec.F_NAME && p.F_CARBONYDRATES == rec.F_CARBONYDRATES && p.F_PROTEINS == rec.F_PROTEINS
+                            select p.F_RECIPE_ID;
+                    if (q.Count() == 0)
+                    {
+                        st.Recipes.Add(rec);
+                        st.SaveChanges();
+                        q = from p in st.Recipes
+                                where p.F_NAME == rec.F_NAME && p.F_CARBONYDRATES == rec.F_CARBONYDRATES && p.F_PROTEINS == rec.F_PROTEINS
+                                select p.F_RECIPE_ID;
+                        id = q.First(x => 1 == 1);
+                    }
                 }
                 return id;
             }
 
+            void LoadToDBIngredients(ref List<Ingredients> li)
+            {
+                int id;
+                using (st = new StartupEntities())
+                {
+                    for (int i = 0; i < li.Count;i++)
+                    //foreach (Ingredients i in li)
+                    {
+                        Ingredients t = new Ingredients();
+                        Ingredients ti = new Ingredients();
+                        t = li[i];
+                        ti = st.Ingredients.Where(x => x.F_NAME == t.F_NAME).DefaultIfEmpty().First();
+                        if (ti == null)
+                        {
+                            Console.WriteLine("ti is null");
+                            st.Ingredients.Add(li[i]);
+                            st.SaveChanges();
+                            ti = st.Ingredients.Where(x => x.F_NAME == t.F_NAME).DefaultIfEmpty().First();
+                        }
+                        else
+                        {
+                            Console.WriteLine("ti is not null");
+                        }
+                        li[i] = ti;
+                    }
+                }
+            }
+
+            void LoadToDBStruct(Rec rec)
+            {
+                using(st= new StartupEntities())
+                {
+                    var q = from p in st.Structure
+                            where p.F_RECIPE_ID == rec.r.F_RECIPE_ID
+                            select p;
+                    if (q.Count() == 0)
+                    {
+                        for (int i = 0; i < rec.str.Count; i++)
+                        {
+                            rec.str[i].F_RECIPE_ID = rec.r.F_RECIPE_ID;
+                            rec.str[i].F_INGREDIENT_ID = rec.i[i].F_INGREDIENT_ID;
+                            Console.WriteLine(rec.str[i].F_RECIPE_ID);
+                            Console.WriteLine(rec.str[i].F_INGREDIENT_ID);
+                            st.Structure.Add(rec.str[i]);
+                        }
+                        st.SaveChanges();
+                    }
+                }
+            }
+
             void LoadToDB(List<Rec> lr)
             {
-                foreach(Rec r in lr)
+                for (int i = 0; i < lr.Count;i++ )
                 {
-                    Console.WriteLine(LoadToDBRec(r.r));
-                    Console.ReadLine();
+                    Rec r = new Rec();
+                    r = lr[i];
+                    r.r.F_RECIPE_ID=LoadToDBRec(r.r);
+                    if (r.r.F_RECIPE_ID != -1)
+                    {
+                        LoadToDBIngredients(ref r.i);
+                        LoadToDBStruct(r);
+                    }
                 }
             }
 
@@ -392,16 +453,77 @@ namespace TestEntity
                         //Console.WriteLine("catid="+c.F_CATEGORY_ID.ToString());
                         foreach (string s in lg)
                         {
-                          LoadToDB(ParseRecipes(c.F_CATEGORY_ID, s));
+                            LoadToDB(ParseRecipes(c.F_CATEGORY_ID, s));
                         }
                     }
                     //Parallel.ForEach(q, c => {
                     //    List<string> lg = GetURLs(c.F_CAT_URL);
                     //    foreach(string s in lg)
                     //    {
-                    //        ParseRecipes(c.F_CATEGORY_ID, s);
+                    //        LoadToDB(ParseRecipes(c.F_CATEGORY_ID, s));
                     //    }
                     //});
+                }
+            }
+        }
+
+        class MatchIngrAndProduct
+        {
+            StartupEntities st;
+            IQueryable<Product> lp;
+            IQueryable<Ingredients> li;
+            //List<Product> lp;
+            //List<Ingredients> li;
+            public MatchIngrAndProduct()
+            {
+                //lp = new List<Product>();
+                //li = new List<Ingredients>();
+            }
+
+            bool M(Ingredients i, Product p)
+            {
+                bool res=true;
+                string [] mi= i.F_NAME.Split();
+                foreach(string s in mi)
+                {
+                    if (p.F_NAME.ToUpper().IndexOf(s.ToUpper())==-1)
+                    {
+                        res = false;
+                        break;
+                    }
+                }
+                return res;
+            }
+
+            public void Match()
+            {
+                int count = 3;
+                using (st = new StartupEntities())
+                {
+                    li = from p in st.Ingredients
+                         where p.F_NAME=="Кабачки" || p.F_NAME=="Томаты"
+                         orderby p.F_NAME.Length descending
+                         select p;
+                    lp = from p in st.Product
+                         select p;
+                    StartupEntities othercontext = new StartupEntities();
+                    foreach (Ingredients i in li)
+                    {
+                        //List<> res = new List<>();
+                        foreach (Product p in lp)
+                        {
+                            if (M(i, p))
+                            {
+                                Console.WriteLine(p.F_NAME);
+                                count++;
+                                //st.Category.SqlQuery("insert into ingredientproduct values ("+i.F_INGREDIENT_ID.ToString()+","+p.F_PRODUCT_ID.ToString()+")");
+                                othercontext.PV_INS_INGREDIENTPRODUCT(i.F_INGREDIENT_ID, p.F_PRODUCT_ID);
+                            }
+                        }
+                        othercontext.SaveChanges();
+                        Console.WriteLine(i.F_NAME);
+                    }
+                    Console.WriteLine(count);
                 }
             }
         }
@@ -452,14 +574,16 @@ namespace TestEntity
 
         static void Main(string[] args)
         {
+            MatchIngrAndProduct m = new MatchIngrAndProduct();
+            m.Match();
             //ParserCat pc = new ParserCat();
             //pc.GoParse("http://www.utkonos.ru/cat/1", "");
             //ParserProduct pc = new ParserProduct();
             //pc.ParseCost();
             //ForTest fr = new ForTest();
             //fr.Test();
-            ParserRecipes pr = new ParserRecipes();
-            pr.GoPasre();
+            //ParserRecipes pr = new ParserRecipes();
+            //pr.GoPasre();
             //Console.WriteLine(content);
             //Console.ReadLine();
             //string filename;

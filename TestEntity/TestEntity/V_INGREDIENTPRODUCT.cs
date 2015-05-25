@@ -12,18 +12,11 @@ namespace TestEntity
     using System;
     using System.Collections.Generic;
     
-    public partial class Ingredients
+    public partial class V_INGREDIENTPRODUCT
     {
-        public Ingredients()
-        {
-            this.Structure = new HashSet<Structure>();
-            this.Product = new HashSet<Product>();
-        }
-    
-        public int F_INGREDIENT_ID { get; set; }
         public string F_NAME { get; set; }
-    
-        public virtual ICollection<Structure> Structure { get; set; }
-        public virtual ICollection<Product> Product { get; set; }
+        public string f_nameproduct { get; set; }
+        public int F_INGREDIENT_ID { get; set; }
+        public int F_PRODUCT_ID { get; set; }
     }
 }

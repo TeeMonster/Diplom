@@ -75,6 +75,15 @@
       <End Role="Recipes" EntitySet="Recipes" />
       <End Role="Structure" EntitySet="Structure" />
     </AssociationSet>
+    <AssociationSet Name="IngredientProduct" Association="StartupModel.IngredientProduct">
+      <End EntitySet="Ingredients" Role="Ingredients" />
+      <End EntitySet="Product" Role="Product" />
+    </AssociationSet>
+    <FunctionImport Name="PV_INS_INGREDIENTPRODUCT">
+      <Parameter Name="in_ingredientid" Mode="In" Type="Int32" />
+      <Parameter Name="in_productid" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <EntitySet Name="V_INGREDIENTPRODUCT" EntityType="StartupModel.V_INGREDIENTPRODUCT" />
   </EntityContainer>
   <EntityType Name="Product">
     <Key>
@@ -84,10 +93,10 @@
     <Property Name="F_CAT_ID" Type="Int32" Nullable="false" />
     <Property Name="F_NAME" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="F_VES" Type="Single" Nullable="false" />
-    <Property Name="F_INGREDIENT_ID" Type="Int32" />
     <Property Name="F_URL" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="Category" Relationship="StartupModel.FK_Product_Category" FromRole="Product" ToRole="Category" />
     <NavigationProperty Name="CostProduct" Relationship="StartupModel.FK_CostProduct_Product" FromRole="Product" ToRole="CostProduct" />
+    <NavigationProperty Name="Ingredients" Relationship="StartupModel.IngredientProduct" FromRole="Product" ToRole="Ingredients" />
   </EntityType>
   <Association Name="FK_Product_Category">
     <End Type="StartupModel.Category" Role="Category" Multiplicity="1" />
@@ -128,6 +137,7 @@
     <Property Name="F_INGREDIENT_ID" Type="Int32" Nullable="false" />
     <Property Name="F_NAME" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="Structure" Relationship="StartupModel.FK_Structure_Ingredients" FromRole="Ingredients" ToRole="Structure" />
+    <NavigationProperty Name="Product" Relationship="StartupModel.IngredientProduct" FromRole="Ingredients" ToRole="Product" />
   </EntityType>
   <EntityType Name="Recipes">
     <Key>
@@ -203,4 +213,20 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="IngredientProduct">
+    <End Type="StartupModel.Ingredients" Multiplicity="*" Role="Ingredients" />
+    <End Type="StartupModel.Product" Multiplicity="*" Role="Product" />
+  </Association>
+  <EntityType Name="V_INGREDIENTPRODUCT">
+    <Key>
+      <PropertyRef Name="F_NAME" />
+      <PropertyRef Name="f_nameproduct" />
+      <PropertyRef Name="F_INGREDIENT_ID" />
+      <PropertyRef Name="F_PRODUCT_ID" />
+    </Key>
+    <Property Name="F_NAME" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="f_nameproduct" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="F_INGREDIENT_ID" Type="Int32" Nullable="false" />
+    <Property Name="F_PRODUCT_ID" Type="Int32" Nullable="false" />
+  </EntityType>
 </Schema>

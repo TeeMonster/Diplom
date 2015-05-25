@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="7d7a6d649a4c47d2b3cd506135f08727" Name="Diagram1">
+      <Diagram DiagramId="7d7a6d649a4c47d2b3cd506135f08727" Name="Diagram1" ZoomLevel="101">
         <EntityTypeShape EntityType="StartupModel.Category" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="StartupModel.V_CATEGORY" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
         <AssociationConnector Association="StartupModel.FK_Category_Category" ManuallyRouted="false" />
@@ -12,13 +12,15 @@
         <AssociationConnector Association="StartupModel.FK_Product_Category" />
         <EntityTypeShape EntityType="StartupModel.CategoryRecipes" Width="1.5" PointX="0.5" PointY="6.125" />
         <EntityTypeShape EntityType="StartupModel.CostProduct" Width="1.5" PointX="6.875" PointY="1.75" />
-        <EntityTypeShape EntityType="StartupModel.Ingredients" Width="1.5" PointX="2.75" PointY="10.25" />
+        <EntityTypeShape EntityType="StartupModel.Ingredients" Width="1.5" PointX="7.875" PointY="9.375" />
         <EntityTypeShape EntityType="StartupModel.Recipes" Width="1.5" PointX="2.75" PointY="5.625" />
         <EntityTypeShape EntityType="StartupModel.Structure" Width="1.5" PointX="5" PointY="6" />
         <AssociationConnector Association="StartupModel.FK_Recipes_CategoryRecipes" />
         <AssociationConnector Association="StartupModel.FK_CostProduct_Product" />
         <AssociationConnector Association="StartupModel.FK_Structure_Ingredients" />
         <AssociationConnector Association="StartupModel.FK_Structure_Recipes1" />
+        <AssociationConnector Association="StartupModel.IngredientProduct" />
+        <EntityTypeShape EntityType="StartupModel.V_INGREDIENTPRODUCT" Width="1.5" PointX="7.375" PointY="4.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

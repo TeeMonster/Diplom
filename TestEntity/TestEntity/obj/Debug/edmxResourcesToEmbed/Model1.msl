@@ -35,7 +35,6 @@
       <EntityTypeMapping TypeName="StartupModel.Product">
         <MappingFragment StoreEntitySet="Product">
           <ScalarProperty Name="F_URL" ColumnName="F_URL" />
-          <ScalarProperty Name="F_INGREDIENT_ID" ColumnName="F_INGREDIENT_ID" />
           <ScalarProperty Name="F_VES" ColumnName="F_VES" />
           <ScalarProperty Name="F_NAME" ColumnName="F_NAME" />
           <ScalarProperty Name="F_CAT_ID" ColumnName="F_CAT_ID" />
@@ -94,6 +93,33 @@
           <ScalarProperty Name="F_VES" ColumnName="F_VES" />
           <ScalarProperty Name="F_INGREDIENT_ID" ColumnName="F_INGREDIENT_ID" />
         </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <AssociationSetMapping Name="IngredientProduct" TypeName="StartupModel.IngredientProduct" StoreEntitySet="IngredientProduct">
+      <EndProperty Name="Product">
+        <ScalarProperty Name="F_PRODUCT_ID" ColumnName="F_PRODUCT_ID" />
+      </EndProperty>
+      <EndProperty Name="Ingredients">
+        <ScalarProperty Name="F_INGREDIENT_ID" ColumnName="F_INGREDIENT_ID" />
+      </EndProperty>
+    </AssociationSetMapping>
+    <FunctionImportMapping FunctionImportName="PV_INS_INGREDIENTPRODUCT" FunctionName="Хранилище StartupModel.PV_INS_INGREDIENTPRODUCT" />
+    <EntitySetMapping Name="V_INGREDIENTPRODUCT">
+      <EntityTypeMapping TypeName="StartupModel.V_INGREDIENTPRODUCT">
+        <MappingFragment StoreEntitySet="V_INGREDIENTPRODUCT">
+          <ScalarProperty Name="F_PRODUCT_ID" ColumnName="F_PRODUCT_ID" />
+          <ScalarProperty Name="F_INGREDIENT_ID" ColumnName="F_INGREDIENT_ID" />
+          <ScalarProperty Name="f_nameproduct" ColumnName="f_nameproduct" />
+          <ScalarProperty Name="F_NAME" ColumnName="F_NAME" />
+        </MappingFragment>
+      </EntityTypeMapping>
+      <EntityTypeMapping TypeName="StartupModel.V_INGREDIENTPRODUCT">
+        <ModificationFunctionMapping>
+          <InsertFunction FunctionName="Хранилище StartupModel.PV_INS_INGREDIENTPRODUCT">
+            <ScalarProperty Name="F_PRODUCT_ID" ParameterName="in_productid" />
+            <ScalarProperty Name="F_INGREDIENT_ID" ParameterName="in_ingredientid" />
+          </InsertFunction>
+        </ModificationFunctionMapping>
       </EntityTypeMapping>
     </EntitySetMapping>
   </EntityContainerMapping>

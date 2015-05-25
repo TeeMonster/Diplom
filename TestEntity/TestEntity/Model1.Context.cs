@@ -35,6 +35,7 @@ namespace TestEntity
         public virtual DbSet<Ingredients> Ingredients { get; set; }
         public virtual DbSet<Recipes> Recipes { get; set; }
         public virtual DbSet<Structure> Structure { get; set; }
+        public virtual DbSet<V_INGREDIENTPRODUCT> V_INGREDIENTPRODUCT { get; set; }
     
         public virtual int PV_INS_CATEGORY(string catname, string catparentname, string caturl)
         {
@@ -64,6 +65,19 @@ namespace TestEntity
                 new ObjectParameter("cost", typeof(decimal));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_INS_COSTPRODUCT", product_idParameter, costParameter);
+        }
+    
+        public virtual int PV_INS_INGREDIENTPRODUCT(Nullable<int> in_ingredientid, Nullable<int> in_productid)
+        {
+            var in_ingredientidParameter = in_ingredientid.HasValue ?
+                new ObjectParameter("in_ingredientid", in_ingredientid) :
+                new ObjectParameter("in_ingredientid", typeof(int));
+    
+            var in_productidParameter = in_productid.HasValue ?
+                new ObjectParameter("in_productid", in_productid) :
+                new ObjectParameter("in_productid", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PV_INS_INGREDIENTPRODUCT", in_ingredientidParameter, in_productidParameter);
         }
     }
 }
