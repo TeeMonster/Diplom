@@ -34,8 +34,8 @@
     <EntitySetMapping Name="Product">
       <EntityTypeMapping TypeName="StartupModel.Product">
         <MappingFragment StoreEntitySet="Product">
+          <ScalarProperty Name="F_WEIGHT" ColumnName="F_WEIGHT" />
           <ScalarProperty Name="F_URL" ColumnName="F_URL" />
-          <ScalarProperty Name="F_VES" ColumnName="F_VES" />
           <ScalarProperty Name="F_NAME" ColumnName="F_NAME" />
           <ScalarProperty Name="F_CAT_ID" ColumnName="F_CAT_ID" />
           <ScalarProperty Name="F_PRODUCT_ID" ColumnName="F_PRODUCT_ID" />
@@ -88,9 +88,9 @@
     <EntitySetMapping Name="Structure">
       <EntityTypeMapping TypeName="StartupModel.Structure">
         <MappingFragment StoreEntitySet="Structure">
+          <ScalarProperty Name="F_WEIGHT" ColumnName="F_WEIGHT" />
           <ScalarProperty Name="F_ID" ColumnName="F_ID" />
           <ScalarProperty Name="F_RECIPE_ID" ColumnName="F_RECIPE_ID" />
-          <ScalarProperty Name="F_VES" ColumnName="F_VES" />
           <ScalarProperty Name="F_INGREDIENT_ID" ColumnName="F_INGREDIENT_ID" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -122,5 +122,68 @@
         </ModificationFunctionMapping>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="BlackListIngredient">
+      <EntityTypeMapping TypeName="StartupModel.BlackListIngredient">
+        <MappingFragment StoreEntitySet="BlackListIngredient">
+          <ScalarProperty Name="F_INGREDIENT_ID" ColumnName="F_INGREDIENT_ID" />
+          <ScalarProperty Name="F_USER_ID" ColumnName="F_USER_ID" />
+          <ScalarProperty Name="F_BLACK_ID" ColumnName="F_BLACK_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BlackListProduct">
+      <EntityTypeMapping TypeName="StartupModel.BlackListProduct">
+        <MappingFragment StoreEntitySet="BlackListProduct">
+          <ScalarProperty Name="F_PRODUCT_ID" ColumnName="F_PRODUCT_ID" />
+          <ScalarProperty Name="F_USER_ID" ColumnName="F_USER_ID" />
+          <ScalarProperty Name="F_BLACK_ID" ColumnName="F_BLACK_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BlackListRecipes">
+      <EntityTypeMapping TypeName="StartupModel.BlackListRecipes">
+        <MappingFragment StoreEntitySet="BlackListRecipes">
+          <ScalarProperty Name="F_RECIPE_ID" ColumnName="F_RECIPE_ID" />
+          <ScalarProperty Name="F_USER_ID" ColumnName="F_USER_ID" />
+          <ScalarProperty Name="F_BLACK_ID" ColumnName="F_BLACK_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="StartupModel.Users">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="F_PASSWORD" ColumnName="F_PASSWORD" />
+          <ScalarProperty Name="F_LOGIN" ColumnName="F_LOGIN" />
+          <ScalarProperty Name="F_USER_ID" ColumnName="F_USER_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="WhiteListProduct">
+      <EntityTypeMapping TypeName="StartupModel.WhiteListProduct">
+        <MappingFragment StoreEntitySet="WhiteListProduct">
+          <ScalarProperty Name="F_PRODUCT_ID" ColumnName="F_PRODUCT_ID" />
+          <ScalarProperty Name="F_USER_ID" ColumnName="F_USER_ID" />
+          <ScalarProperty Name="F_WHITE_ID" ColumnName="F_WHITE_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="F_GET_COST_RECIPES" FunctionName="Хранилище StartupModel.F_GET_COST_RECIPES">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="StartupModel.F_GET_COST_RECIPES_Result">
+          <ScalarProperty Name="out_recipe_id" ColumnName="out_recipe_id" />
+          <ScalarProperty Name="out_recipe_cost" ColumnName="out_recipe_cost" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="F_GET_PRODUCT_IN_STRUCTURE" FunctionName="Хранилище StartupModel.F_GET_PRODUCT_IN_STRUCTURE">
+      <ResultMapping>
+        <ComplexTypeMapping TypeName="StartupModel.F_GET_PRODUCT_IN_STRUCTURE_Result">
+          <ScalarProperty Name="out_ingredient_id" ColumnName="out_ingredient_id" />
+          <ScalarProperty Name="out_product_id" ColumnName="out_product_id" />
+          <ScalarProperty Name="out_cost_for_one_weight" ColumnName="out_cost_for_one_weight" />
+        </ComplexTypeMapping>
+      </ResultMapping>
+    </FunctionImportMapping>
+    <FunctionImportMapping FunctionImportName="P_GET_PRODUCTINSTRUCT" FunctionName="Хранилище StartupModel.P_GET_PRODUCTINSTRUCT" />
   </EntityContainerMapping>
 </Mapping>

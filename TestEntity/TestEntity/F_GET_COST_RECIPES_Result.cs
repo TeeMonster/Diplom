@@ -10,22 +10,10 @@
 namespace TestEntity
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class Ingredients
+    public partial class F_GET_COST_RECIPES_Result
     {
-        public Ingredients()
-        {
-            this.Structure = new HashSet<Structure>();
-            this.Product = new HashSet<Product>();
-            this.BlackListIngredient = new HashSet<BlackListIngredient>();
-        }
-    
-        public int F_INGREDIENT_ID { get; set; }
-        public string F_NAME { get; set; }
-    
-        public virtual ICollection<Structure> Structure { get; set; }
-        public virtual ICollection<Product> Product { get; set; }
-        public virtual ICollection<BlackListIngredient> BlackListIngredient { get; set; }
+        public Nullable<int> out_recipe_id { get; set; }
+        public Nullable<decimal> out_recipe_cost { get; set; }
     }
 }

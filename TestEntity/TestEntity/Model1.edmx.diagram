@@ -21,6 +21,19 @@
         <AssociationConnector Association="StartupModel.FK_Structure_Recipes1" />
         <AssociationConnector Association="StartupModel.IngredientProduct" />
         <EntityTypeShape EntityType="StartupModel.V_INGREDIENTPRODUCT" Width="1.5" PointX="7.375" PointY="4.75" />
+        <EntityTypeShape EntityType="StartupModel.BlackListIngredient" Width="1.5" PointX="10.5" PointY="12" />
+        <EntityTypeShape EntityType="StartupModel.BlackListProduct" Width="1.5" PointX="8.125" PointY="12.75" />
+        <EntityTypeShape EntityType="StartupModel.BlackListRecipes" Width="1.5" PointX="5.375" PointY="10.125" />
+        <EntityTypeShape EntityType="StartupModel.Users" Width="1.5" PointX="0.75" PointY="14.25" />
+        <EntityTypeShape EntityType="StartupModel.WhiteListProduct" Width="1.5" PointX="10.125" PointY="5.75" />
+        <AssociationConnector Association="StartupModel.FK_BlackListIngredient_Ingredients" />
+        <AssociationConnector Association="StartupModel.FK_BlackListIngredient_Users" />
+        <AssociationConnector Association="StartupModel.FK_BlackListProduct_Product" />
+        <AssociationConnector Association="StartupModel.FK_BlackListProduct_Users" />
+        <AssociationConnector Association="StartupModel.FK_BlackListRecipes_Recipes" />
+        <AssociationConnector Association="StartupModel.FK_BlackListRecipes_Users" />
+        <AssociationConnector Association="StartupModel.FK_WhiteListProduct_Product" />
+        <AssociationConnector Association="StartupModel.FK_WhiteListProduct_Users" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

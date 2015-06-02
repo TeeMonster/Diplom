@@ -7,3 +7,32 @@
 3)загрузил ингредиент в состав блюда.
 
 Если запустим процедуру в тот же день, что и запускали до этого - заполнение цены?
+
+select v.F_NAME, v.f_nameproduct, (cp.F_COST/(p.F_VES*1000)), p.F_VES from V_INGREDIENTPRODUCT v 
+inner join CostProduct cp on v.F_PRODUCT_ID=cp.F_PRODUCT_ID
+inner join Product p on v.F_PRODUCT_ID=p.F_PRODUCT_ID
+where cp.F_COST_ID=
+	(select top 1 cp1.F_COST_ID  from V_INGREDIENTPRODUCT p1
+	inner join CostProduct cp1 on p1.F_PRODUCT_ID=cp1.F_PRODUCT_ID
+	inner join Product p2 on p2.F_PRODUCT_ID=p1.F_PRODUCT_ID 
+	where p1.F_INGREDIENT_ID=v.F_INGREDIENT_ID and (cp1.F_COST/p2.F_VES)=
+		(select min(cp11.F_COST/p21.F_VES)  from V_INGREDIENTPRODUCT p11
+		inner join CostProduct cp11 on p11.F_PRODUCT_ID=cp11.F_PRODUCT_ID
+		inner join Product p21 on p21.F_PRODUCT_ID=p11.F_PRODUCT_ID 
+		where p1.F_INGREDIENT_ID=p11.F_INGREDIENT_ID and GETDATE() between F_DATEFROM and F_DATETO))
+		order by F_NAME
+
+продукт минимальной стоимости соответствующий ингредиенту + стоимсоть одного грамма.
+нужно придумать как быть с вайт листом и блэк листом продуктов!
+
+select r.F_RECIPE_ID, r.F_NAME, sum(f.out_cost_for_one_weight*s.F_VES) from Recipes r
+inner join Structure s on s.F_RECIPE_ID=r.F_RECIPE_ID
+inner join F_GET_PROSUCTINSTRUCTURE(GETDATE()) f on f.out_f_ingredient_id=s.F_INGREDIENT_ID
+where r.F_RECIPE_ID not in (select r1.F_RECIPE_ID 
+						from Recipes r1
+						inner join Structure s1 on r1.F_RECIPE_ID=s1.F_RECIPE_ID
+						left join F_GET_PROSUCTINSTRUCTURE(GETDATE()) f1 on f1.out_f_ingredient_id=s1.F_INGREDIENT_ID
+						where f1.out_f_ingredient_id is null)
+group by r.F_RECIPE_ID, r.F_NAME
+
+рецепты которые можно посчитать

@@ -18,16 +18,20 @@ namespace TestEntity
         {
             this.CostProduct = new HashSet<CostProduct>();
             this.Ingredients = new HashSet<Ingredients>();
+            this.BlackListProduct = new HashSet<BlackListProduct>();
+            this.WhiteListProduct = new HashSet<WhiteListProduct>();
         }
     
         public int F_PRODUCT_ID { get; set; }
         public int F_CAT_ID { get; set; }
         public string F_NAME { get; set; }
-        public float F_VES { get; set; }
         public string F_URL { get; set; }
+        public decimal F_WEIGHT { get; set; }
     
         public virtual Category Category { get; set; }
         public virtual ICollection<CostProduct> CostProduct { get; set; }
         public virtual ICollection<Ingredients> Ingredients { get; set; }
+        public virtual ICollection<BlackListProduct> BlackListProduct { get; set; }
+        public virtual ICollection<WhiteListProduct> WhiteListProduct { get; set; }
     }
 }

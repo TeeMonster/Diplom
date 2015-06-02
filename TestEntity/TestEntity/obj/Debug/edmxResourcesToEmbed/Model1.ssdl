@@ -1,5 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="Хранилище StartupModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="BlackListIngredient">
+    <Key>
+      <PropertyRef Name="F_BLACK_ID" />
+    </Key>
+    <Property Name="F_BLACK_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="F_USER_ID" Type="int" Nullable="false" />
+    <Property Name="F_INGREDIENT_ID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BlackListProduct">
+    <Key>
+      <PropertyRef Name="F_BLACK_ID" />
+    </Key>
+    <Property Name="F_BLACK_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="F_USER_ID" Type="int" Nullable="false" />
+    <Property Name="F_PRODUCT_ID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BlackListRecipes">
+    <Key>
+      <PropertyRef Name="F_BLACK_ID" />
+    </Key>
+    <Property Name="F_BLACK_ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="F_USER_ID" Type="int" Nullable="false" />
+    <Property Name="F_RECIPE_ID" Type="int" Nullable="false" />
+  </EntityType>
   <EntityType Name="Category">
     <Key>
       <PropertyRef Name="F_CAT_ID" />
@@ -51,7 +75,7 @@
     <Property Name="F_PRODUCT_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="F_CAT_ID" Type="int" Nullable="false" />
     <Property Name="F_NAME" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="F_VES" Type="real" Nullable="false" />
+    <Property Name="F_WEIGHT" Type="numeric" Precision="8" Scale="4" Nullable="false" />
     <Property Name="F_URL" Type="nvarchar(max)" Nullable="false" />
   </EntityType>
   <EntityType Name="Recipes">
@@ -72,9 +96,25 @@
       <PropertyRef Name="F_ID" />
     </Key>
     <Property Name="F_INGREDIENT_ID" Type="int" Nullable="false" />
-    <Property Name="F_VES" Type="numeric" Precision="8" Scale="2" Nullable="false" />
+    <Property Name="F_WEIGHT" Type="numeric" Precision="8" Scale="2" Nullable="false" />
     <Property Name="F_RECIPE_ID" Type="int" Nullable="false" />
     <Property Name="F_ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="F_USER_ID" />
+    </Key>
+    <Property Name="F_USER_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="F_LOGIN" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="F_PASSWORD" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WhiteListProduct">
+    <Key>
+      <PropertyRef Name="F_WHITE_ID" />
+    </Key>
+    <Property Name="F_WHITE_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="F_USER_ID" Type="int" Nullable="false" />
+    <Property Name="F_PRODUCT_ID" Type="int" Nullable="false" />
   </EntityType>
   <!--Ошибки, обнаруженные при создании:
 предупреждение 6002: В таблице или представлении "Startup.dbo.V_CATEGORY" не определен первичный ключ. Ключ был выведен, а определение таблицы или представления было создано в режиме только для чтения.-->
@@ -101,6 +141,78 @@
     <Property Name="F_INGREDIENT_ID" Type="int" Nullable="false" />
     <Property Name="F_PRODUCT_ID" Type="int" Nullable="false" />
   </EntityType>
+  <Association Name="FK_BlackListIngredient_Ingredients">
+    <End Role="Ingredients" Type="Self.Ingredients" Multiplicity="1" />
+    <End Role="BlackListIngredient" Type="Self.BlackListIngredient" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Ingredients">
+        <PropertyRef Name="F_INGREDIENT_ID" />
+      </Principal>
+      <Dependent Role="BlackListIngredient">
+        <PropertyRef Name="F_INGREDIENT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BlackListIngredient_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="BlackListIngredient" Type="Self.BlackListIngredient" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="F_USER_ID" />
+      </Principal>
+      <Dependent Role="BlackListIngredient">
+        <PropertyRef Name="F_USER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BlackListProduct_Product">
+    <End Role="Product" Type="Self.Product" Multiplicity="1" />
+    <End Role="BlackListProduct" Type="Self.BlackListProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="F_PRODUCT_ID" />
+      </Principal>
+      <Dependent Role="BlackListProduct">
+        <PropertyRef Name="F_PRODUCT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BlackListProduct_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="BlackListProduct" Type="Self.BlackListProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="F_USER_ID" />
+      </Principal>
+      <Dependent Role="BlackListProduct">
+        <PropertyRef Name="F_USER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BlackListRecipes_Recipes">
+    <End Role="Recipes" Type="Self.Recipes" Multiplicity="1" />
+    <End Role="BlackListRecipes" Type="Self.BlackListRecipes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Recipes">
+        <PropertyRef Name="F_RECIPE_ID" />
+      </Principal>
+      <Dependent Role="BlackListRecipes">
+        <PropertyRef Name="F_RECIPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BlackListRecipes_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="BlackListRecipes" Type="Self.BlackListRecipes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="F_USER_ID" />
+      </Principal>
+      <Dependent Role="BlackListRecipes">
+        <PropertyRef Name="F_USER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Category_Category">
     <End Role="Category" Type="Self.Category" Multiplicity="0..1" />
     <End Role="Category1" Type="Self.Category" Multiplicity="*" />
@@ -114,7 +226,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_CostProduct_Product">
-    <End Role="Product" Type="Self.Product" Multiplicity="1" />
+    <End Role="Product" Type="Self.Product" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="CostProduct" Type="Self.CostProduct" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Product">
@@ -126,7 +240,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_IngredientProduct_Ingredients">
-    <End Role="Ingredients" Type="Self.Ingredients" Multiplicity="1" />
+    <End Role="Ingredients" Type="Self.Ingredients" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="IngredientProduct" Type="Self.IngredientProduct" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Ingredients">
@@ -138,7 +254,9 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_IngredientProduct_Product">
-    <End Role="Product" Type="Self.Product" Multiplicity="1" />
+    <End Role="Product" Type="Self.Product" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
     <End Role="IngredientProduct" Type="Self.IngredientProduct" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Product">
@@ -173,18 +291,6 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_Structure_Ingredients">
-    <End Role="Ingredients" Type="Self.Ingredients" Multiplicity="1" />
-    <End Role="Structure" Type="Self.Structure" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="Ingredients">
-        <PropertyRef Name="F_INGREDIENT_ID" />
-      </Principal>
-      <Dependent Role="Structure">
-        <PropertyRef Name="F_INGREDIENT_ID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_Structure_Recipes1">
     <End Role="Recipes" Type="Self.Recipes" Multiplicity="1" />
     <End Role="Structure" Type="Self.Structure" Multiplicity="*" />
@@ -197,6 +303,59 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Association Name="FK_WhiteListProduct_Product">
+    <End Role="Product" Type="Self.Product" Multiplicity="1" />
+    <End Role="WhiteListProduct" Type="Self.WhiteListProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="F_PRODUCT_ID" />
+      </Principal>
+      <Dependent Role="WhiteListProduct">
+        <PropertyRef Name="F_PRODUCT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_WhiteListProduct_Users">
+    <End Role="Users" Type="Self.Users" Multiplicity="1" />
+    <End Role="WhiteListProduct" Type="Self.WhiteListProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="F_USER_ID" />
+      </Principal>
+      <Dependent Role="WhiteListProduct">
+        <PropertyRef Name="F_USER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Function Name="F_GET_COST_RECIPES" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="in_date" Type="date" Mode="In" />
+    <Parameter Name="in_user_id" Type="int" Mode="In" />
+    <ReturnType>
+      <CollectionType>
+        <RowType>
+          <Property Name="out_recipe_id" Type="int" />
+          <Property Name="out_recipe_cost" Type="money" />
+        </RowType>
+      </CollectionType>
+    </ReturnType>
+  </Function>
+  <Function Name="F_GET_PRODUCT_IN_STRUCTURE" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="in_date" Type="date" Mode="In" />
+    <Parameter Name="in_user_id" Type="int" Mode="In" />
+    <ReturnType>
+      <CollectionType>
+        <RowType>
+          <Property Name="out_ingredient_id" Type="int" />
+          <Property Name="out_product_id" Type="int" />
+          <Property Name="out_cost_for_one_weight" Type="numeric" Precision="10" Scale="6" />
+        </RowType>
+      </CollectionType>
+    </ReturnType>
+  </Function>
+  <Function Name="P_GET_PRODUCTINSTRUCT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="in_date" Type="date" Mode="In" />
+    <Parameter Name="in_user_id" Type="int" Mode="In" />
+  </Function>
   <Function Name="P_INS_COSTPRODUCT" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="product_id" Type="int" Mode="In" />
     <Parameter Name="cost" Type="money" Mode="In" />
@@ -211,6 +370,9 @@
     <Parameter Name="in_productid" Type="int" Mode="In" />
   </Function>
   <EntityContainer Name="Хранилище StartupModelContainer">
+    <EntitySet Name="BlackListIngredient" EntityType="Self.BlackListIngredient" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BlackListProduct" EntityType="Self.BlackListProduct" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="BlackListRecipes" EntityType="Self.BlackListRecipes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="CategoryRecipes" EntityType="Self.CategoryRecipes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="CostProduct" EntityType="Self.CostProduct" Schema="dbo" store:Type="Tables" />
@@ -218,6 +380,8 @@
     <EntitySet Name="Product" EntityType="Self.Product" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Recipes" EntityType="Self.Recipes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Structure" EntityType="Self.Structure" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="WhiteListProduct" EntityType="Self.WhiteListProduct" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="IngredientProduct" EntityType="Self.IngredientProduct" store:Type="Tables" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [IngredientProduct].[F_INGREDIENT_ID] AS [F_INGREDIENT_ID], 
@@ -240,6 +404,30 @@
     [V_INGREDIENTPRODUCT].[F_PRODUCT_ID] AS [F_PRODUCT_ID]
     FROM [dbo].[V_INGREDIENTPRODUCT] AS [V_INGREDIENTPRODUCT]</DefiningQuery>
     </EntitySet>
+    <AssociationSet Name="FK_BlackListIngredient_Ingredients" Association="Self.FK_BlackListIngredient_Ingredients">
+      <End Role="Ingredients" EntitySet="Ingredients" />
+      <End Role="BlackListIngredient" EntitySet="BlackListIngredient" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BlackListIngredient_Users" Association="Self.FK_BlackListIngredient_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="BlackListIngredient" EntitySet="BlackListIngredient" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BlackListProduct_Product" Association="Self.FK_BlackListProduct_Product">
+      <End Role="Product" EntitySet="Product" />
+      <End Role="BlackListProduct" EntitySet="BlackListProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BlackListProduct_Users" Association="Self.FK_BlackListProduct_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="BlackListProduct" EntitySet="BlackListProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BlackListRecipes_Recipes" Association="Self.FK_BlackListRecipes_Recipes">
+      <End Role="Recipes" EntitySet="Recipes" />
+      <End Role="BlackListRecipes" EntitySet="BlackListRecipes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BlackListRecipes_Users" Association="Self.FK_BlackListRecipes_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="BlackListRecipes" EntitySet="BlackListRecipes" />
+    </AssociationSet>
     <AssociationSet Name="FK_Category_Category" Association="Self.FK_Category_Category">
       <End Role="Category" EntitySet="Category" />
       <End Role="Category1" EntitySet="Category" />
@@ -264,13 +452,17 @@
       <End Role="CategoryRecipes" EntitySet="CategoryRecipes" />
       <End Role="Recipes" EntitySet="Recipes" />
     </AssociationSet>
-    <AssociationSet Name="FK_Structure_Ingredients" Association="Self.FK_Structure_Ingredients">
-      <End Role="Ingredients" EntitySet="Ingredients" />
-      <End Role="Structure" EntitySet="Structure" />
-    </AssociationSet>
     <AssociationSet Name="FK_Structure_Recipes1" Association="Self.FK_Structure_Recipes1">
       <End Role="Recipes" EntitySet="Recipes" />
       <End Role="Structure" EntitySet="Structure" />
+    </AssociationSet>
+    <AssociationSet Name="FK_WhiteListProduct_Product" Association="Self.FK_WhiteListProduct_Product">
+      <End Role="Product" EntitySet="Product" />
+      <End Role="WhiteListProduct" EntitySet="WhiteListProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_WhiteListProduct_Users" Association="Self.FK_WhiteListProduct_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="WhiteListProduct" EntitySet="WhiteListProduct" />
     </AssociationSet>
   </EntityContainer>
 </Schema>

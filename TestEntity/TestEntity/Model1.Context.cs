@@ -36,6 +36,11 @@ namespace TestEntity
         public virtual DbSet<Recipes> Recipes { get; set; }
         public virtual DbSet<Structure> Structure { get; set; }
         public virtual DbSet<V_INGREDIENTPRODUCT> V_INGREDIENTPRODUCT { get; set; }
+        public virtual DbSet<BlackListIngredient> BlackListIngredient { get; set; }
+        public virtual DbSet<BlackListProduct> BlackListProduct { get; set; }
+        public virtual DbSet<BlackListRecipes> BlackListRecipes { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
+        public virtual DbSet<WhiteListProduct> WhiteListProduct { get; set; }
     
         public virtual int PV_INS_CATEGORY(string catname, string catparentname, string caturl)
         {
@@ -78,6 +83,47 @@ namespace TestEntity
                 new ObjectParameter("in_productid", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("PV_INS_INGREDIENTPRODUCT", in_ingredientidParameter, in_productidParameter);
+        }
+    
+        [DbFunction("StartupEntities", "F_GET_COST_RECIPES")]
+        public virtual IQueryable<F_GET_COST_RECIPES_Result> F_GET_COST_RECIPES(Nullable<System.DateTime> in_date, Nullable<int> in_user_id)
+        {
+            var in_dateParameter = in_date.HasValue ?
+                new ObjectParameter("in_date", in_date) :
+                new ObjectParameter("in_date", typeof(System.DateTime));
+    
+            var in_user_idParameter = in_user_id.HasValue ?
+                new ObjectParameter("in_user_id", in_user_id) :
+                new ObjectParameter("in_user_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<F_GET_COST_RECIPES_Result>("[StartupEntities].[F_GET_COST_RECIPES](@in_date, @in_user_id)", in_dateParameter, in_user_idParameter);
+        }
+    
+        [DbFunction("StartupEntities", "F_GET_PRODUCT_IN_STRUCTURE")]
+        public virtual IQueryable<F_GET_PRODUCT_IN_STRUCTURE_Result> F_GET_PRODUCT_IN_STRUCTURE(Nullable<System.DateTime> in_date, Nullable<int> in_user_id)
+        {
+            var in_dateParameter = in_date.HasValue ?
+                new ObjectParameter("in_date", in_date) :
+                new ObjectParameter("in_date", typeof(System.DateTime));
+    
+            var in_user_idParameter = in_user_id.HasValue ?
+                new ObjectParameter("in_user_id", in_user_id) :
+                new ObjectParameter("in_user_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<F_GET_PRODUCT_IN_STRUCTURE_Result>("[StartupEntities].[F_GET_PRODUCT_IN_STRUCTURE](@in_date, @in_user_id)", in_dateParameter, in_user_idParameter);
+        }
+    
+        public virtual int P_GET_PRODUCTINSTRUCT(Nullable<System.DateTime> in_date, Nullable<int> in_user_id)
+        {
+            var in_dateParameter = in_date.HasValue ?
+                new ObjectParameter("in_date", in_date) :
+                new ObjectParameter("in_date", typeof(System.DateTime));
+    
+            var in_user_idParameter = in_user_id.HasValue ?
+                new ObjectParameter("in_user_id", in_user_id) :
+                new ObjectParameter("in_user_id", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_GET_PRODUCTINSTRUCT", in_dateParameter, in_user_idParameter);
         }
     }
 }

@@ -84,6 +84,55 @@
       <Parameter Name="in_productid" Mode="In" Type="Int32" />
     </FunctionImport>
     <EntitySet Name="V_INGREDIENTPRODUCT" EntityType="StartupModel.V_INGREDIENTPRODUCT" />
+    <EntitySet Name="BlackListIngredient" EntityType="StartupModel.BlackListIngredient" />
+    <EntitySet Name="BlackListProduct" EntityType="StartupModel.BlackListProduct" />
+    <EntitySet Name="BlackListRecipes" EntityType="StartupModel.BlackListRecipes" />
+    <EntitySet Name="Users" EntityType="StartupModel.Users" />
+    <EntitySet Name="WhiteListProduct" EntityType="StartupModel.WhiteListProduct" />
+    <AssociationSet Name="FK_BlackListIngredient_Ingredients" Association="StartupModel.FK_BlackListIngredient_Ingredients">
+      <End Role="Ingredients" EntitySet="Ingredients" />
+      <End Role="BlackListIngredient" EntitySet="BlackListIngredient" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BlackListIngredient_Users" Association="StartupModel.FK_BlackListIngredient_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="BlackListIngredient" EntitySet="BlackListIngredient" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BlackListProduct_Product" Association="StartupModel.FK_BlackListProduct_Product">
+      <End Role="Product" EntitySet="Product" />
+      <End Role="BlackListProduct" EntitySet="BlackListProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BlackListProduct_Users" Association="StartupModel.FK_BlackListProduct_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="BlackListProduct" EntitySet="BlackListProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BlackListRecipes_Recipes" Association="StartupModel.FK_BlackListRecipes_Recipes">
+      <End Role="Recipes" EntitySet="Recipes" />
+      <End Role="BlackListRecipes" EntitySet="BlackListRecipes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BlackListRecipes_Users" Association="StartupModel.FK_BlackListRecipes_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="BlackListRecipes" EntitySet="BlackListRecipes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_WhiteListProduct_Product" Association="StartupModel.FK_WhiteListProduct_Product">
+      <End Role="Product" EntitySet="Product" />
+      <End Role="WhiteListProduct" EntitySet="WhiteListProduct" />
+    </AssociationSet>
+    <AssociationSet Name="FK_WhiteListProduct_Users" Association="StartupModel.FK_WhiteListProduct_Users">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="WhiteListProduct" EntitySet="WhiteListProduct" />
+    </AssociationSet>
+    <FunctionImport Name="F_GET_COST_RECIPES" IsComposable="true" ReturnType="Collection(StartupModel.F_GET_COST_RECIPES_Result)">
+      <Parameter Name="in_date" Mode="In" Type="DateTime" />
+      <Parameter Name="in_user_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="F_GET_PRODUCT_IN_STRUCTURE" IsComposable="true" ReturnType="Collection(StartupModel.F_GET_PRODUCT_IN_STRUCTURE_Result)">
+      <Parameter Name="in_date" Mode="In" Type="DateTime" />
+      <Parameter Name="in_user_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="P_GET_PRODUCTINSTRUCT">
+      <Parameter Name="in_date" Mode="In" Type="DateTime" />
+      <Parameter Name="in_user_id" Mode="In" Type="Int32" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="Product">
     <Key>
@@ -92,11 +141,13 @@
     <Property Name="F_PRODUCT_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="F_CAT_ID" Type="Int32" Nullable="false" />
     <Property Name="F_NAME" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="F_VES" Type="Single" Nullable="false" />
     <Property Name="F_URL" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="Category" Relationship="StartupModel.FK_Product_Category" FromRole="Product" ToRole="Category" />
     <NavigationProperty Name="CostProduct" Relationship="StartupModel.FK_CostProduct_Product" FromRole="Product" ToRole="CostProduct" />
     <NavigationProperty Name="Ingredients" Relationship="StartupModel.IngredientProduct" FromRole="Product" ToRole="Ingredients" />
+    <Property Name="F_WEIGHT" Type="Decimal" Nullable="false" Precision="8" Scale="4" />
+    <NavigationProperty Name="BlackListProduct" Relationship="StartupModel.FK_BlackListProduct_Product" FromRole="Product" ToRole="BlackListProduct" />
+    <NavigationProperty Name="WhiteListProduct" Relationship="StartupModel.FK_WhiteListProduct_Product" FromRole="Product" ToRole="WhiteListProduct" />
   </EntityType>
   <Association Name="FK_Product_Category">
     <End Type="StartupModel.Category" Role="Category" Multiplicity="1" />
@@ -138,6 +189,7 @@
     <Property Name="F_NAME" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
     <NavigationProperty Name="Structure" Relationship="StartupModel.FK_Structure_Ingredients" FromRole="Ingredients" ToRole="Structure" />
     <NavigationProperty Name="Product" Relationship="StartupModel.IngredientProduct" FromRole="Ingredients" ToRole="Product" />
+    <NavigationProperty Name="BlackListIngredient" Relationship="StartupModel.FK_BlackListIngredient_Ingredients" FromRole="Ingredients" ToRole="BlackListIngredient" />
   </EntityType>
   <EntityType Name="Recipes">
     <Key>
@@ -153,17 +205,18 @@
     <Property Name="F_FATS" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
     <NavigationProperty Name="CategoryRecipes" Relationship="StartupModel.FK_Recipes_CategoryRecipes" FromRole="Recipes" ToRole="CategoryRecipes" />
     <NavigationProperty Name="Structure" Relationship="StartupModel.FK_Structure_Recipes1" FromRole="Recipes" ToRole="Structure" />
+    <NavigationProperty Name="BlackListRecipes" Relationship="StartupModel.FK_BlackListRecipes_Recipes" FromRole="Recipes" ToRole="BlackListRecipes" />
   </EntityType>
   <EntityType Name="Structure">
     <Key>
       <PropertyRef Name="F_ID" />
     </Key>
     <Property Name="F_INGREDIENT_ID" Type="Int32" Nullable="false" />
-    <Property Name="F_VES" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
     <Property Name="F_RECIPE_ID" Type="Int32" Nullable="false" />
     <Property Name="F_ID" Type="Int64" Nullable="false" />
     <NavigationProperty Name="Ingredients" Relationship="StartupModel.FK_Structure_Ingredients" FromRole="Structure" ToRole="Ingredients" />
     <NavigationProperty Name="Recipes" Relationship="StartupModel.FK_Structure_Recipes1" FromRole="Structure" ToRole="Recipes" />
+    <Property Name="F_WEIGHT" Type="Decimal" Nullable="false" Precision="8" Scale="2" />
   </EntityType>
   <Association Name="FK_Recipes_CategoryRecipes">
     <End Type="StartupModel.CategoryRecipes" Role="CategoryRecipes" Multiplicity="0..1" />
@@ -229,4 +282,161 @@
     <Property Name="F_INGREDIENT_ID" Type="Int32" Nullable="false" />
     <Property Name="F_PRODUCT_ID" Type="Int32" Nullable="false" />
   </EntityType>
+  <EntityType Name="BlackListIngredient">
+    <Key>
+      <PropertyRef Name="F_BLACK_ID" />
+    </Key>
+    <Property Name="F_BLACK_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="F_USER_ID" Type="Int32" Nullable="false" />
+    <Property Name="F_INGREDIENT_ID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Ingredients" Relationship="StartupModel.FK_BlackListIngredient_Ingredients" FromRole="BlackListIngredient" ToRole="Ingredients" />
+    <NavigationProperty Name="Users" Relationship="StartupModel.FK_BlackListIngredient_Users" FromRole="BlackListIngredient" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="BlackListProduct">
+    <Key>
+      <PropertyRef Name="F_BLACK_ID" />
+    </Key>
+    <Property Name="F_BLACK_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="F_USER_ID" Type="Int32" Nullable="false" />
+    <Property Name="F_PRODUCT_ID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Product" Relationship="StartupModel.FK_BlackListProduct_Product" FromRole="BlackListProduct" ToRole="Product" />
+    <NavigationProperty Name="Users" Relationship="StartupModel.FK_BlackListProduct_Users" FromRole="BlackListProduct" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="BlackListRecipes">
+    <Key>
+      <PropertyRef Name="F_BLACK_ID" />
+    </Key>
+    <Property Name="F_BLACK_ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="F_USER_ID" Type="Int32" Nullable="false" />
+    <Property Name="F_RECIPE_ID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Recipes" Relationship="StartupModel.FK_BlackListRecipes_Recipes" FromRole="BlackListRecipes" ToRole="Recipes" />
+    <NavigationProperty Name="Users" Relationship="StartupModel.FK_BlackListRecipes_Users" FromRole="BlackListRecipes" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="F_USER_ID" />
+    </Key>
+    <Property Name="F_USER_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="F_LOGIN" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="F_PASSWORD" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="BlackListIngredient" Relationship="StartupModel.FK_BlackListIngredient_Users" FromRole="Users" ToRole="BlackListIngredient" />
+    <NavigationProperty Name="BlackListProduct" Relationship="StartupModel.FK_BlackListProduct_Users" FromRole="Users" ToRole="BlackListProduct" />
+    <NavigationProperty Name="BlackListRecipes" Relationship="StartupModel.FK_BlackListRecipes_Users" FromRole="Users" ToRole="BlackListRecipes" />
+    <NavigationProperty Name="WhiteListProduct" Relationship="StartupModel.FK_WhiteListProduct_Users" FromRole="Users" ToRole="WhiteListProduct" />
+  </EntityType>
+  <EntityType Name="WhiteListProduct">
+    <Key>
+      <PropertyRef Name="F_WHITE_ID" />
+    </Key>
+    <Property Name="F_WHITE_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="F_USER_ID" Type="Int32" Nullable="false" />
+    <Property Name="F_PRODUCT_ID" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Product" Relationship="StartupModel.FK_WhiteListProduct_Product" FromRole="WhiteListProduct" ToRole="Product" />
+    <NavigationProperty Name="Users" Relationship="StartupModel.FK_WhiteListProduct_Users" FromRole="WhiteListProduct" ToRole="Users" />
+  </EntityType>
+  <Association Name="FK_BlackListIngredient_Ingredients">
+    <End Type="StartupModel.Ingredients" Role="Ingredients" Multiplicity="1" />
+    <End Type="StartupModel.BlackListIngredient" Role="BlackListIngredient" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Ingredients">
+        <PropertyRef Name="F_INGREDIENT_ID" />
+      </Principal>
+      <Dependent Role="BlackListIngredient">
+        <PropertyRef Name="F_INGREDIENT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BlackListIngredient_Users">
+    <End Type="StartupModel.Users" Role="Users" Multiplicity="1" />
+    <End Type="StartupModel.BlackListIngredient" Role="BlackListIngredient" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="F_USER_ID" />
+      </Principal>
+      <Dependent Role="BlackListIngredient">
+        <PropertyRef Name="F_USER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BlackListProduct_Product">
+    <End Type="StartupModel.Product" Role="Product" Multiplicity="1" />
+    <End Type="StartupModel.BlackListProduct" Role="BlackListProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="F_PRODUCT_ID" />
+      </Principal>
+      <Dependent Role="BlackListProduct">
+        <PropertyRef Name="F_PRODUCT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BlackListProduct_Users">
+    <End Type="StartupModel.Users" Role="Users" Multiplicity="1" />
+    <End Type="StartupModel.BlackListProduct" Role="BlackListProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="F_USER_ID" />
+      </Principal>
+      <Dependent Role="BlackListProduct">
+        <PropertyRef Name="F_USER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BlackListRecipes_Recipes">
+    <End Type="StartupModel.Recipes" Role="Recipes" Multiplicity="1" />
+    <End Type="StartupModel.BlackListRecipes" Role="BlackListRecipes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Recipes">
+        <PropertyRef Name="F_RECIPE_ID" />
+      </Principal>
+      <Dependent Role="BlackListRecipes">
+        <PropertyRef Name="F_RECIPE_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BlackListRecipes_Users">
+    <End Type="StartupModel.Users" Role="Users" Multiplicity="1" />
+    <End Type="StartupModel.BlackListRecipes" Role="BlackListRecipes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="F_USER_ID" />
+      </Principal>
+      <Dependent Role="BlackListRecipes">
+        <PropertyRef Name="F_USER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_WhiteListProduct_Product">
+    <End Type="StartupModel.Product" Role="Product" Multiplicity="1" />
+    <End Type="StartupModel.WhiteListProduct" Role="WhiteListProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Product">
+        <PropertyRef Name="F_PRODUCT_ID" />
+      </Principal>
+      <Dependent Role="WhiteListProduct">
+        <PropertyRef Name="F_PRODUCT_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_WhiteListProduct_Users">
+    <End Type="StartupModel.Users" Role="Users" Multiplicity="1" />
+    <End Type="StartupModel.WhiteListProduct" Role="WhiteListProduct" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="F_USER_ID" />
+      </Principal>
+      <Dependent Role="WhiteListProduct">
+        <PropertyRef Name="F_USER_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="F_GET_COST_RECIPES_Result">
+    <Property Type="Int32" Name="out_recipe_id" Nullable="true" />
+    <Property Type="Decimal" Name="out_recipe_cost" Nullable="true" Precision="19" Scale="4" />
+  </ComplexType>
+  <ComplexType Name="F_GET_PRODUCT_IN_STRUCTURE_Result">
+    <Property Type="Int32" Name="out_ingredient_id" Nullable="true" />
+    <Property Type="Int32" Name="out_product_id" Nullable="true" />
+    <Property Type="Decimal" Name="out_cost_for_one_weight" Nullable="true" Precision="10" Scale="6" />
+  </ComplexType>
 </Schema>

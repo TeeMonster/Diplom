@@ -17,6 +17,7 @@ namespace TestEntity
         public Recipes()
         {
             this.Structure = new HashSet<Structure>();
+            this.BlackListRecipes = new HashSet<BlackListRecipes>();
         }
     
         public int F_RECIPE_ID { get; set; }
@@ -30,5 +31,6 @@ namespace TestEntity
     
         public virtual CategoryRecipes CategoryRecipes { get; set; }
         public virtual ICollection<Structure> Structure { get; set; }
+        public virtual ICollection<BlackListRecipes> BlackListRecipes { get; set; }
     }
 }

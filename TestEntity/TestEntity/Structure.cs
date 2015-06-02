@@ -15,9 +15,9 @@ namespace TestEntity
     public partial class Structure
     {
         public int F_INGREDIENT_ID { get; set; }
-        public decimal F_VES { get; set; }
         public int F_RECIPE_ID { get; set; }
         public long F_ID { get; set; }
+        public decimal F_WEIGHT { get; set; }
     
         public virtual Ingredients Ingredients { get; set; }
         public virtual Recipes Recipes { get; set; }

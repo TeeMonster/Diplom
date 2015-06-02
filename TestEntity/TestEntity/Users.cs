@@ -12,20 +12,23 @@ namespace TestEntity
     using System;
     using System.Collections.Generic;
     
-    public partial class Ingredients
+    public partial class Users
     {
-        public Ingredients()
+        public Users()
         {
-            this.Structure = new HashSet<Structure>();
-            this.Product = new HashSet<Product>();
             this.BlackListIngredient = new HashSet<BlackListIngredient>();
+            this.BlackListProduct = new HashSet<BlackListProduct>();
+            this.BlackListRecipes = new HashSet<BlackListRecipes>();
+            this.WhiteListProduct = new HashSet<WhiteListProduct>();
         }
     
-        public int F_INGREDIENT_ID { get; set; }
-        public string F_NAME { get; set; }
+        public int F_USER_ID { get; set; }
+        public string F_LOGIN { get; set; }
+        public string F_PASSWORD { get; set; }
     
-        public virtual ICollection<Structure> Structure { get; set; }
-        public virtual ICollection<Product> Product { get; set; }
         public virtual ICollection<BlackListIngredient> BlackListIngredient { get; set; }
+        public virtual ICollection<BlackListProduct> BlackListProduct { get; set; }
+        public virtual ICollection<BlackListRecipes> BlackListRecipes { get; set; }
+        public virtual ICollection<WhiteListProduct> WhiteListProduct { get; set; }
     }
 }
